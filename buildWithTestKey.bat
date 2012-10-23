@@ -1,0 +1,1 @@
+mvn clean install -Prelease -Dsign.keystore=%~dp0%test-key.keystore -Dsign.alias=mykey -Dsign.storepass=testtest -Dsign.keypass=testtest

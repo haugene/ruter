@@ -1,3 +1,9 @@
+# Typical project stuff
+target
+.classpath
+.project
+.settings
+
 # built application files
 *.apk
 *.ap_
