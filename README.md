@@ -25,5 +25,6 @@ And, as always:
 mvn eclipse:eclipse will generate eclipse projects
 
 btw:
-http://code.google.com/p/maven-android-plugin/wiki/GettingStarted
-http://developer.android.com/about/versions/android-4.0.html
+http://code.google.com/p/maven-android-plugin/wiki/GettingStarted<br />
+http://developer.android.com/about/versions/android-4.0.html<br />
+https://github.com/akquinet/android-archetypes
