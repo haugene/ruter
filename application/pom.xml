@@ -19,7 +19,12 @@
     <dependency>
       <groupId>com.google.android</groupId>
       <artifactId>android</artifactId>
-    </dependency>
+    	</dependency>
+    	<dependency>
+    	    <groupId>us.monoid.web</groupId>
+			<artifactId>resty</artifactId>
+			<version>0.3.1</version>
+    	</dependency>
   </dependencies>
 
   <build>
