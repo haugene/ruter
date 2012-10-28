@@ -5,7 +5,7 @@ import java.io.IOException;
 import us.monoid.web.Resty;
 import us.monoid.web.TextResource;
 
-public class RuterRepository {
+public class RealTimeRepository {
 	
 	public static void main(String[] args) {
 		doIt();
