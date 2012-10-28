@@ -31,11 +31,9 @@ public class RealTimeRepository {
 
 		String service = WEB_SERVICE_HOST_URL + REAL_TIME_FIND_MATCHES;
 
-		List<RealTimeLocation> realTimeLocations = new ArrayList<RealTimeLocation>();
+		List<RealTimeLocation> locations;
 
 		try {
-
-			System.out.println("Query url: " + service + query);
 
 			/*
 			 * Make a Resty service and call the service with location parameter
@@ -49,19 +47,9 @@ public class RealTimeRepository {
 
 			// We have the textual json, add {} wrapper and parse
 			JSONObject response = new JSONObject("{\"resultArray\":"
-					+ json.toString().trim() + "}");
+					+ json.toString() + "}");
 
-			JSONArray resultArray = response.getJSONArray("resultArray");
-
-			for (int i = 0; i < resultArray.length(); i++) {
-
-				JSONObject location = resultArray.getJSONObject(i);
-
-				RealTimeLocation realTimeLocation = getRealTimeLocation(location);
-
-				realTimeLocations.add(realTimeLocation);
-
-			}
+			locations = parseRealTimeLocationsFromResponse(response);
 
 		} catch (Exception e) {
 			/*
@@ -70,11 +58,41 @@ public class RealTimeRepository {
 			 * "no hits matching that name" case. Custom RuntimeException?
 			 */
 			e.printStackTrace();
+			return new ArrayList<RealTimeLocation>();
 		}
 
 		// Return the list
-		return realTimeLocations;
+		return locations;
 
+	}
+
+	/**
+	 * Reads a json response for the FindMatches ruter service.
+	 * 
+	 * The response will contain an array of locations that needs to be parsed
+	 * into {@link RealTimeLocation} objects. These objects are then added to
+	 * the list given as parameter.
+	 * 
+	 * @param realTimeLocations
+	 * @param response
+	 * @return a {@link List} of parsed {@link RealTimeLocation} objects
+	 * @throws JSONException
+	 */
+	private List<RealTimeLocation> parseRealTimeLocationsFromResponse(
+			JSONObject response) throws JSONException {
+
+		List<RealTimeLocation> realTimeLocations = new ArrayList<RealTimeLocation>();
+
+		JSONArray resultArray = response.getJSONArray("resultArray");
+
+		for (int i = 0; i < resultArray.length(); i++) {
+
+			JSONObject location = resultArray.getJSONObject(i);
+			RealTimeLocation realTimeLocation = getRealTimeLocation(location);
+			realTimeLocations.add(realTimeLocation);
+		}
+
+		return realTimeLocations;
 	}
 
 	/**
