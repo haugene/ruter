@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 
+import no.ruter.app.domain.RealTimeData;
 import no.ruter.app.domain.RealTimeLocation;
 
 import org.junit.Test;
@@ -19,11 +20,6 @@ import org.junit.Test;
 public class RealTimeRepositoryTest {
 
 	@Test
-	public void init() {
-		new RealTimeRepository();
-	}
-
-	@Test
 	public void shouldReturnListOfLocations() {
 
 		RealTimeRepository repo = new RealTimeRepository();
@@ -32,7 +28,23 @@ public class RealTimeRepositoryTest {
 
 		assertEquals("Did not return correct number of hits", 11,
 				locations.size());
+		
+		
+		boolean containsElement = "Skøyen [tog]".equalsIgnoreCase(locations.get(0).getName());
+		assertTrue("Did not contain expected element", containsElement);
 
+	}
+	
+	@Test
+	public void shouldGetRealTimeDataGivenValidLocationId(){
+		
+		RealTimeRepository repo = new RealTimeRepository();
+		
+		// Query real time data for Skøyen [TOG]
+		// TODO: Mock this. Will fail if you're coding late ;)
+		List<RealTimeData> realTimeData = repo.getRealTimeData(3012500);
+		assertTrue("No real time data response", realTimeData.size() > 0);
+		
 	}
 
 }

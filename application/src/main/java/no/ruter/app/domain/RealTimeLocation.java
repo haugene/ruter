@@ -36,7 +36,6 @@ public class RealTimeLocation {
 	/*
 	 * Getters and setters
 	 */
-
 	public String getName() {
 		return name;
 	}

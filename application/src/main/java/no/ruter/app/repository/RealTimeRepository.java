@@ -4,7 +4,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joda.time.DateTime;
+
+import no.ruter.app.domain.RealTimeData;
 import no.ruter.app.domain.RealTimeLocation;
+import no.ruter.app.exception.RepositoryException;
 import us.monoid.json.JSONArray;
 import us.monoid.json.JSONException;
 import us.monoid.json.JSONObject;
@@ -15,6 +19,7 @@ public class RealTimeRepository {
 
 	private final static String WEB_SERVICE_HOST_URL = "http://api-test.trafikanten.no/";
 	private final static String REAL_TIME_FIND_MATCHES = "RealTime/FindMatches/";
+	private final static String REAL_TIME_GET_DATA = "RealTime/GetRealTimeData/";
 
 	/**
 	 * Calls the findMathces service of the ruter api.
@@ -55,32 +60,109 @@ public class RealTimeRepository {
 	}
 
 	/**
+	 * Calls the GetRealTimeData service of the ruter api.
+	 * 
+	 * @param id
+	 *            id of the {@link RealTimeLocation} to get {@link RealTimeData}
+	 *            for
+	 * @return {@link List} of {@link RealTimeData}
+	 */
+	public List<RealTimeData> getRealTimeData(Integer id) {
+
+		String service = WEB_SERVICE_HOST_URL + REAL_TIME_GET_DATA;
+
+		try {
+
+			JSONObject response = runService(service, id.toString());
+
+			return parseRealTimeDataFromResponse(response);
+
+		} catch (Exception e) {
+			throw new RepositoryException("Getting real time data for id: "
+					+ id + " failed");
+		}
+
+	}
+
+	/**
+	 * Reads a json response for the GetRealTimeData ruter api service.
+	 * 
+	 * The response will contain an array of real time data entries that needs
+	 * to be parsed into {@link RealTimeData} objects.
+	 * 
+	 * @param response
+	 *            the {@link JSONObject} returned by ruter api service
+	 * @return {@link List} of {@link RealTimeData}
+	 * @throws JSONException
+	 */
+	private List<RealTimeData> parseRealTimeDataFromResponse(JSONObject response)
+			throws JSONException {
+
+		List<RealTimeData> dataEntries = new ArrayList<RealTimeData>();
+
+		JSONArray resultArray = response.getJSONArray("result");
+
+		for (int i = 0; i < resultArray.length(); i++) {
+
+			JSONObject data = resultArray.getJSONObject(i);
+			RealTimeData realTimeData = getRealTimeData(data);
+			dataEntries.add(realTimeData);
+		}
+
+		return dataEntries;
+
+	}
+
+	/**
+	 * Parses a {@link RealTimeData} object from JSON representation
+	 * 
+	 * @param data
+	 * @return
+	 * @throws JSONException
+	 *             if parsing fails
+	 */
+	private RealTimeData getRealTimeData(JSONObject data) throws JSONException {
+
+		String line = data.getString("PublishedLineName");
+		String destination = data.getString("DestinationName");
+		DateTime expectedArrivalTime = null; // TODO: read value
+		DateTime timestamp = null; // TODO: read value
+
+		return new RealTimeData(line, destination, expectedArrivalTime,
+				timestamp);
+
+	}
+
+	/**
 	 * Method for running a JSON service from Ruter api.
 	 * 
-	 * Runs a given query string on a given service.
-	 * Returns a {@link JSONObject} representing the ruter api response
-	 * @param service service url
-	 * @param query 
+	 * Runs a given query string on a given service. Returns a
+	 * {@link JSONObject} representing the ruter api response
+	 * 
+	 * @param service
+	 *            service url
+	 * @param query
 	 * @return {@link JSONObject} containing the result
-	 * @throws IOException if web call fails
-	 * @throws JSONException if parsing fails
+	 * @throws IOException
+	 *             if web call fails
+	 * @throws JSONException
+	 *             if parsing fails
 	 */
 	private JSONObject runService(String service, String query)
 			throws IOException, JSONException {
 		/*
-		 * Make a Resty service and call the service with location parameter
-		 * We request a text resource instead of a JSONObject because the
-		 * ruter service returns a JSON array, we want a valid object for
-		 * the parser.
+		 * Make a Resty service and call the service with location parameter We
+		 * request a text resource instead of a JSONObject because the ruter
+		 * service returns a JSON array, we want a valid object for the parser.
 		 * 
 		 * Solution: Wrap the array in JSON, we call the array resultArray
 		 */
 		TextResource json = new Resty().text(service + query);
 
 		// We have the textual json, add {} wrapper and parse
-		JSONObject response = new JSONObject("{\"result\":"
-				+ json.toString() + "}");
-		
+		JSONObject response = new JSONObject("{\"result\":" + json.toString()
+				+ "}");
+
 		return response;
 	}
 
@@ -88,8 +170,7 @@ public class RealTimeRepository {
 	 * Reads a json response for the FindMatches ruter service.
 	 * 
 	 * The response will contain an array of locations that needs to be parsed
-	 * into {@link RealTimeLocation} objects. These objects are then added to
-	 * the list given as parameter.
+	 * into {@link RealTimeLocation} objects.
 	 * 
 	 * @param realTimeLocations
 	 * @param response
