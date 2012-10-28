@@ -1,5 +1,6 @@
 package no.ruter.app.repository;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,19 +35,7 @@ public class RealTimeRepository {
 
 		try {
 
-			/*
-			 * Make a Resty service and call the service with location parameter
-			 * We request a text resource instead of a JSONObject because the
-			 * ruter service returns a JSON array, we want a valid object for
-			 * the parser.
-			 * 
-			 * Solution: Wrap the array in JSON, we call the array resultArray
-			 */
-			TextResource json = new Resty().text(service + query);
-
-			// We have the textual json, add {} wrapper and parse
-			JSONObject response = new JSONObject("{\"resultArray\":"
-					+ json.toString() + "}");
+			JSONObject response = runService(service, query);
 
 			locations = parseRealTimeLocationsFromResponse(response);
 
@@ -66,6 +55,36 @@ public class RealTimeRepository {
 	}
 
 	/**
+	 * Method for running a JSON service from Ruter api.
+	 * 
+	 * Runs a given query string on a given service.
+	 * Returns a {@link JSONObject} representing the ruter api response
+	 * @param service service url
+	 * @param query 
+	 * @return {@link JSONObject} containing the result
+	 * @throws IOException if web call fails
+	 * @throws JSONException if parsing fails
+	 */
+	private JSONObject runService(String service, String query)
+			throws IOException, JSONException {
+		/*
+		 * Make a Resty service and call the service with location parameter
+		 * We request a text resource instead of a JSONObject because the
+		 * ruter service returns a JSON array, we want a valid object for
+		 * the parser.
+		 * 
+		 * Solution: Wrap the array in JSON, we call the array resultArray
+		 */
+		TextResource json = new Resty().text(service + query);
+
+		// We have the textual json, add {} wrapper and parse
+		JSONObject response = new JSONObject("{\"result\":"
+				+ json.toString() + "}");
+		
+		return response;
+	}
+
+	/**
 	 * Reads a json response for the FindMatches ruter service.
 	 * 
 	 * The response will contain an array of locations that needs to be parsed
@@ -82,7 +101,7 @@ public class RealTimeRepository {
 
 		List<RealTimeLocation> realTimeLocations = new ArrayList<RealTimeLocation>();
 
-		JSONArray resultArray = response.getJSONArray("resultArray");
+		JSONArray resultArray = response.getJSONArray("result");
 
 		for (int i = 0; i < resultArray.length(); i++) {
 
