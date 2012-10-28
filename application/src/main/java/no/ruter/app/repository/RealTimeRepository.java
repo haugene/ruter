@@ -115,5 +115,4 @@ public class RealTimeRepository {
 
 		return new RealTimeLocation(name, id, xcoord, ycoord);
 	}
-
 }
