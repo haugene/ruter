@@ -18,8 +18,8 @@ import us.monoid.web.TextResource;
 public class RealTimeRepository {
 
 	private final static String WEB_SERVICE_HOST_URL = "http://api-test.trafikanten.no/";
-	private final static String REAL_TIME_FIND_MATCHES = "RealTime/FindMatches/";
-	private final static String REAL_TIME_GET_DATA = "RealTime/GetRealTimeData/";
+	private final static String FIND_MATCHES = "RealTime/FindMatches/";
+	private final static String GET_DATA = "RealTime/GetRealTimeData/";
 
 	/**
 	 * Calls the findMathces service of the ruter api.
@@ -34,7 +34,7 @@ public class RealTimeRepository {
 	 */
 	public List<RealTimeLocation> findLocations(String query) {
 
-		String service = WEB_SERVICE_HOST_URL + REAL_TIME_FIND_MATCHES;
+		String service = WEB_SERVICE_HOST_URL + FIND_MATCHES;
 
 		List<RealTimeLocation> locations;
 
@@ -69,7 +69,7 @@ public class RealTimeRepository {
 	 */
 	public List<RealTimeData> getRealTimeData(Integer id) {
 
-		String service = WEB_SERVICE_HOST_URL + REAL_TIME_GET_DATA;
+		String service = WEB_SERVICE_HOST_URL + GET_DATA;
 
 		try {
 
