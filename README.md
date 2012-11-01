@@ -18,8 +18,8 @@ When we descide to get our own key we need to undeploy all our artifacts before 
 "Be aware that Android cannot re-deploy artifacts using a different key, so be sure to undeploy all artifacts before running the release."
 
 Now it almost builds, but the integration test project will fail
-The plugin tries to contact a emulated device, or a developer phone.
-NEXT STEP: Emulator!
+The plugin tries to contact a emulated device, or a developer phone. Set up an emulator in eclipse.
+Deploy to emulator using mvn android:deploy
 
 And, as always:
 mvn eclipse:eclipse will generate eclipse projects
