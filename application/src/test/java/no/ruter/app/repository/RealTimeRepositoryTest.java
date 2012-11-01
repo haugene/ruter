@@ -10,7 +10,7 @@ import no.ruter.app.domain.RealTimeLocation;
 import org.junit.Test;
 
 /**
- * Test class for {@link RealTimeRepository}
+ * Test class for {@link RealTimeRepositoryImpl}
  * 
  * TODO: Should mock repository calls
  * 
@@ -22,7 +22,7 @@ public class RealTimeRepositoryTest {
 	@Test
 	public void shouldReturnListOfLocations() {
 
-		RealTimeRepository repo = new RealTimeRepository();
+		RealTimeRepositoryImpl repo = new RealTimeRepositoryImpl();
 
 		List<RealTimeLocation> locations = repo.findLocations("skøyen");
 
@@ -38,7 +38,7 @@ public class RealTimeRepositoryTest {
 	@Test
 	public void shouldGetRealTimeDataGivenValidLocationId(){
 		
-		RealTimeRepository repo = new RealTimeRepository();
+		RealTimeRepositoryImpl repo = new RealTimeRepositoryImpl();
 		
 		// Query real time data for Skøyen [TOG]
 		// TODO: Mock this. Will fail if you're coding late ;)
