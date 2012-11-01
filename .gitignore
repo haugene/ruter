@@ -4,6 +4,10 @@ target
 .project
 .settings
 
+#IDEA
+*.iml
+.idea/
+
 # built application files
 *.apk
 *.ap_
