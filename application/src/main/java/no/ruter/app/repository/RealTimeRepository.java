@@ -5,8 +5,14 @@ import java.util.List;
 import no.ruter.app.domain.RealTimeData;
 import no.ruter.app.domain.RealTimeLocation;
 
+/**
+ * Repository class for all api calls towards the RealTime services of Ruter API
+ * 
+ * @author Kristian
+ * 
+ */
 public interface RealTimeRepository {
-	
+
 	/**
 	 * Calls the findMathces service of the ruter api.
 	 * 
@@ -19,7 +25,7 @@ public interface RealTimeRepository {
 	 * @return {@link List} of {@link RealTimeLocation} objects. Never null
 	 */
 	public List<RealTimeLocation> findLocations(String query);
-	
+
 	/**
 	 * Calls the GetRealTimeData service of the ruter api.
 	 * 

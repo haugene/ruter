@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import no.ruter.app.domain.RealTimeData;
 import no.ruter.app.domain.RealTimeLocation;
@@ -15,6 +16,11 @@ import us.monoid.json.JSONObject;
 import us.monoid.web.Resty;
 import us.monoid.web.TextResource;
 
+/**
+ * Implements the {@link RealTimeRepository}
+ * @author Kristian
+ *
+ */
 public class RealTimeRepositoryImpl implements RealTimeRepository{
 
 	private final static String WEB_SERVICE_HOST_URL = "http://api-test.trafikanten.no/";
@@ -112,8 +118,8 @@ public class RealTimeRepositoryImpl implements RealTimeRepository{
 
 		String line = data.getString("PublishedLineName");
 		String destination = data.getString("DestinationName");
-		DateTime expectedArrivalTime = null; // TODO: read value
-		DateTime timestamp = null; // TODO: read value
+		DateTime expectedArrivalTime = parseDate(data.getString("ExpectedArrivalTime"));
+		DateTime timestamp = parseDate(data.getString("RecordedAtTime"));
 
 		return new RealTimeData(line, destination, expectedArrivalTime,
 				timestamp);
@@ -200,5 +206,27 @@ public class RealTimeRepositoryImpl implements RealTimeRepository{
 		Integer ycoord = location.getInt("Y");
 
 		return new RealTimeLocation(name, id, xcoord, ycoord);
+	}
+
+	/**
+	 * Helper method that parses a {@link DateTime} represented as {@link String}
+	 * @param dateString representation of a {@link DateTime}
+	 * @return {@link DateTime}
+	 */
+	private DateTime parseDate(String dateString) {
+			
+		String timeAndOffset = dateString.substring(dateString.indexOf("(")+1, dateString.indexOf(")"));
+		
+		// We have a date represented by 1234325234+0100, lets divide and conquer
+		Integer offsetMarker = timeAndOffset.indexOf("+");
+		
+		String time = timeAndOffset.substring(0, offsetMarker);
+		String hoursOffset = timeAndOffset.substring(offsetMarker+1, offsetMarker+3);
+		String minutesOffset = timeAndOffset.substring(offsetMarker+3, timeAndOffset.length());
+		
+		DateTimeZone dateTimeZone = DateTimeZone.forOffsetHoursMinutes(Integer.parseInt(hoursOffset), Integer.parseInt(minutesOffset));
+		DateTime dateTime = new DateTime(Long.parseLong(time), dateTimeZone);
+		
+		return dateTime;
 	}
 }
