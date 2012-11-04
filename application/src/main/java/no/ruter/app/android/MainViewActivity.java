@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.Window;
 
 
 public class MainViewActivity extends FragmentActivity implements ActionBar.TabListener {
@@ -41,8 +42,11 @@ public class MainViewActivity extends FragmentActivity implements ActionBar.TabL
         // Specify that tabs should be displayed in the action bar.
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-        setUpViewPager();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayShowHomeEnabled(false);
 
+
+        setUpViewPager();
         setUpTabs();
     }
 
