@@ -52,4 +52,9 @@ public class RealTimeLocation {
 		return ycoord;
 	}
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
 }
