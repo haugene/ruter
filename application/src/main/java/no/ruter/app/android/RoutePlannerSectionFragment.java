@@ -8,6 +8,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import no.ruter.app.domain.RealTimeLocation;
@@ -23,6 +24,9 @@ public class RoutePlannerSectionFragment extends Fragment {
     private final static int SEARCH_THRESHOLD = 3;
 
     private RealTimeLocation[] locations;
+
+    private RealTimeLocation selectedFromLocation;
+
     private GetRealTimeLocationAsyncTask asyncTask;
 
     @Override
@@ -46,6 +50,11 @@ public class RoutePlannerSectionFragment extends Fragment {
         final ArrayAdapter<RealTimeLocation> fromStationAdapter = new ArrayAdapter<RealTimeLocation>(getActivity(), android.R.layout.simple_list_item_1, locations);
         fromStationAutoComplete.setAdapter(fromStationAdapter);
 
+        fromStationAutoComplete.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selectedFromLocation = (RealTimeLocation) parent.getItemAtPosition(position);
+            }
+        });
 
         fromStationAutoComplete.addTextChangedListener(new TextWatcher() {
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -76,6 +85,7 @@ public class RoutePlannerSectionFragment extends Fragment {
             public void afterTextChanged(Editable editable) {
             }
         });
+
     }
 
     private class GetRealTimeLocationAsyncTask extends AsyncTask<String, Void, List<RealTimeLocation>> {
