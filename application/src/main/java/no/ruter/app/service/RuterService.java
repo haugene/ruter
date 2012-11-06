@@ -2,6 +2,7 @@ package no.ruter.app.service;
 
 import java.util.List;
 
+import no.ruter.app.domain.RealTimeData;
 import no.ruter.app.domain.RealTimeLocation;
 
 /**
@@ -32,5 +33,12 @@ public interface RuterService {
 	 * @return list of {@link RealTimeLocation} that are close
 	 */
 	public List<RealTimeLocation> findRealTimeLocationsNearMe();
+
+    /**
+     * Retrieves the real time data for the selected location
+     *
+     * @return list of (@link RealTimeData)
+     */
+    public List<RealTimeData> getRealTimeData(Integer id);
 
 }

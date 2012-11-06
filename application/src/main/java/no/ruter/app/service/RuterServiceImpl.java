@@ -2,6 +2,7 @@ package no.ruter.app.service;
 
 import java.util.List;
 
+import no.ruter.app.domain.RealTimeData;
 import no.ruter.app.domain.RealTimeLocation;
 import no.ruter.app.repository.RealTimeRepository;
 import no.ruter.app.repository.RepositoryFactory;
@@ -38,5 +39,12 @@ public class RuterServiceImpl implements RuterService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<RealTimeData> getRealTimeData(Integer id) {
+        return realTimeRepository.getRealTimeData(id);
+    }
 
 }
