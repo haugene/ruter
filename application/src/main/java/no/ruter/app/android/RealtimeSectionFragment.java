@@ -6,19 +6,23 @@ import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.TextView;
+import no.ruter.app.domain.RealTimeData;
 import no.ruter.app.domain.RealTimeLocation;
 import no.ruter.app.service.ServiceFactory;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class RoutePlannerSectionFragment extends Fragment {
+public class RealtimeSectionFragment extends Fragment {
 
     private View rootView;
 
@@ -34,7 +38,7 @@ public class RoutePlannerSectionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // The last two arguments ensure LayoutParams are inflated
         // properly.
-        rootView = inflater.inflate(R.layout.fragment_section_routeplanner, container, false);
+        rootView = inflater.inflate(R.layout.fragment_section_realtime, container, false);
         Bundle args = getArguments();
 
         setUpAutoCompleteTextViews();
@@ -43,44 +47,59 @@ public class RoutePlannerSectionFragment extends Fragment {
     }
 
     private void setUpAutoCompleteTextViews() {
-        final AutoCompleteTextView fromStationAutoComplete = (AutoCompleteTextView) rootView.findViewById(R.id.fromStationAutoCompleteView);
-        fromStationAutoComplete.setThreshold(0); // TODO: Set to SEARCH_THRESHOLD
+        final AutoCompleteTextView realtimeAutoComplete = (AutoCompleteTextView) rootView.findViewById(R.id.realtimeAutoCompleteView);
+        realtimeAutoComplete.setThreshold(0); // TODO: Set to SEARCH_THRESHOLD
 
-        locations = new RealTimeLocation[0];
-
-        final ArrayAdapter<RealTimeLocation> fromStationAdapter = new ArrayAdapter<RealTimeLocation>(getActivity(), android.R.layout.simple_list_item_1, locations);
-        fromStationAutoComplete.setAdapter(fromStationAdapter);
-
-        fromStationAutoComplete.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectedFromLocation = (RealTimeLocation) parent.getItemAtPosition(position);
+        realtimeAutoComplete.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                boolean handled = false;
+                if(i == EditorInfo.IME_ACTION_SEARCH) {
+                    List<RealTimeData> realTimeData = getRealTimeData(3010011);
+                    for(RealTimeData data: realTimeData) {
+                        System.out.println(data.getDestination());
+                    }
+                    handled = true;
+                }
+                return handled;
             }
         });
 
-        fromStationAutoComplete.addTextChangedListener(new TextWatcher() {
+        locations = new RealTimeLocation[0];
+
+        final ArrayAdapter<RealTimeLocation> realtimeAdapter = new ArrayAdapter<RealTimeLocation>(getActivity(), android.R.layout.simple_list_item_1, locations);
+        realtimeAutoComplete.setAdapter(realtimeAdapter);
+
+        realtimeAutoComplete.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selectedFromLocation = (RealTimeLocation) parent.getItemAtPosition(position); // TODO: Index out of bounds issue
+            }
+        });
+
+        realtimeAutoComplete.addTextChangedListener(new TextWatcher() {
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
 
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 // Cancel the old task
-                if(asyncTask != null && asyncTask.getStatus() != AsyncTask.Status.FINISHED) {
+                if (asyncTask != null && asyncTask.getStatus() != AsyncTask.Status.FINISHED) {
                     asyncTask.cancel(true);
                 }
-                if(charSequence.toString().length() >= SEARCH_THRESHOLD) {
+
+                if (charSequence.toString().length() >= SEARCH_THRESHOLD) {
                     try {
                         Log.d("Fragment", "On text changed thread = " + Thread.currentThread().getName());
                         // AsyncTask can only be used once, so have to make a new one each time
                         asyncTask = new GetRealTimeLocationAsyncTask();
 
-                        List<RealTimeLocation> realTimeLocations = asyncTask.execute(new String[]{ charSequence.toString() }).get();
+                        List<RealTimeLocation> realTimeLocations = asyncTask.execute(new String[]{charSequence.toString()}).get();
                         locations = realTimeLocations.toArray(new RealTimeLocation[realTimeLocations.size()]);
 
-                        // TODO: 05.11.12 - daniel - shouldn't have to initialize a new ArrayAdapter each time. fromStationAdapter.notifyDataSetChanged() should do the trick, but isn't
-                        fromStationAutoComplete.setAdapter(new ArrayAdapter<RealTimeLocation>(getActivity(), android.R.layout.simple_list_item_1, locations));
+                        // TODO: 05.11.12 - daniel - shouldn't have to initialize a new ArrayAdapter each time. realtimeAdapter.notifyDataSetChanged() should do the trick, but isn't
+                        realtimeAutoComplete.setAdapter(new ArrayAdapter<RealTimeLocation>(getActivity(), android.R.layout.simple_list_item_1, locations));
                     } catch (InterruptedException e) {
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                        e.printStackTrace();
                     } catch (ExecutionException e) {
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                        e.printStackTrace();
                     }
                 }
             }
@@ -98,6 +117,10 @@ public class RoutePlannerSectionFragment extends Fragment {
             Log.d("Fragment", "doInBackground thread = " + Thread.currentThread().getName());
             return ServiceFactory.getRuterService().findRealTimeLocations(location[0].replaceAll(" ", "%20")); // TODO: Replace space in repo
         }
+    }
+
+    private List<RealTimeData> getRealTimeData(Integer id) {
+        return ServiceFactory.getRuterService().getRealTimeData(id);
     }
 
 }

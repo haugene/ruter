@@ -1,48 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:background="#e5e5e5" >
 
     <RelativeLayout
+            android:id="@+id/relativeLayout1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_margin="8dp"
             android:background="@drawable/list_background"
-            android:padding="0dp" >
+            android:padding="5dp" >
+
+        <AutoCompleteTextView
+                android:id="@+id/fromStationAutoCompleteView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:ems="10"
+                android:hint="fra sted"
+                />
+
+        <AutoCompleteTextView
+                android:id="@+id/toStationAutoCompleteView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/fromStationAutoCompleteView"
+                android:ems="10"
+                android:hint="til sted" />
 
         <ImageButton
                 android:id="@+id/imageButton2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
+                android:layout_below="@+id/toStationAutoCompleteView"
                 android:background="@null"
                 android:scaleType="center"
-                android:src="@drawable/icon_search" />
+                android:src="@drawable/ic_search" />
 
-        <AutoCompleteTextView
-                android:id="@+id/fromStationAutoCompleteView"
+        <Switch
+                android:id="@+id/switch1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/imageButton2"
                 android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:ems="10"
-                android:hint="fra stasjon" />
+                android:textOff="Avgang"
+                android:textOn="Ankomst" />
 
     </RelativeLayout>
-
-
-    <ListView
-            android:id="@+id/listView1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/relativeLayout1"
-            android:layout_below="@+id/relativeLayout1"
-            android:layout_marginTop="21dp" >
-    </ListView>
 
 </RelativeLayout>

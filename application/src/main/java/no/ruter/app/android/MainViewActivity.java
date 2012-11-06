@@ -72,10 +72,9 @@ public class MainViewActivity extends FragmentActivity implements ActionBar.TabL
         public Fragment getItem(int i) {
             switch (i) {
                 case 0:
-                    // The first section of the app is the most interesting -- it offers
-                    // a launchpad into the other demonstrations in this example application.
+                    return new RealtimeSectionFragment();
+                case 2:
                     return new RoutePlannerSectionFragment();
-
                 default:
                     return new RoutePlannerSectionFragment();
             }
@@ -88,9 +87,9 @@ public class MainViewActivity extends FragmentActivity implements ActionBar.TabL
     }
 
     private void setUpTabs() {
-        actionBar.addTab(actionBar.newTab().setText("Planlegger").setTabListener(this));
+        actionBar.addTab(actionBar.newTab().setText("Sanntid").setTabListener(this));
         actionBar.addTab(actionBar.newTab().setText("I nærheten").setTabListener(this));
-        actionBar.addTab(actionBar.newTab().setText("Favoritter").setTabListener(this));
+        actionBar.addTab(actionBar.newTab().setText("Planlegger").setTabListener(this));
     }
 
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
