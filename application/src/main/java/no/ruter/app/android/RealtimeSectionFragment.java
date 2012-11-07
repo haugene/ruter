@@ -11,14 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.TextView;
+import android.widget.*;
 import no.ruter.app.domain.RealTimeData;
 import no.ruter.app.domain.RealTimeLocation;
 import no.ruter.app.service.ServiceFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -28,11 +26,14 @@ public class RealtimeSectionFragment extends Fragment {
 
     private final static int SEARCH_THRESHOLD = 3;
 
-    private RealTimeLocation[] locations;
-
     private RealTimeLocation selectedFromLocation;
+    private List<RealTimeLocation> realTimeLocations;
 
     private GetRealTimeLocationAsyncTask asyncTask;
+
+    private ArrayAdapter<RealTimeLocation> realtimeAdapter;
+
+    private AutoCompleteTextView realtimeAutoComplete;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -47,15 +48,15 @@ public class RealtimeSectionFragment extends Fragment {
     }
 
     private void setUpAutoCompleteTextViews() {
-        final AutoCompleteTextView realtimeAutoComplete = (AutoCompleteTextView) rootView.findViewById(R.id.realtimeAutoCompleteView);
-        realtimeAutoComplete.setThreshold(0); // TODO: Set to SEARCH_THRESHOLD
+        realtimeAutoComplete = (AutoCompleteTextView) rootView.findViewById(R.id.realtimeAutoCompleteView);
+        realtimeAutoComplete.setThreshold(0); // TODO: Set to SEARCH_THRESHOLD - or maybe keep at 0, but start pulling from the API at 3?
 
         realtimeAutoComplete.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 boolean handled = false;
-                if(i == EditorInfo.IME_ACTION_SEARCH) {
+                if (i == EditorInfo.IME_ACTION_SEARCH) {
                     List<RealTimeData> realTimeData = getRealTimeData(3010011);
-                    for(RealTimeData data: realTimeData) {
+                    for (RealTimeData data : realTimeData) {
                         System.out.println(data.getDestination());
                     }
                     handled = true;
@@ -64,9 +65,9 @@ public class RealtimeSectionFragment extends Fragment {
             }
         });
 
-        locations = new RealTimeLocation[0];
+        realTimeLocations = new ArrayList<RealTimeLocation>();
 
-        final ArrayAdapter<RealTimeLocation> realtimeAdapter = new ArrayAdapter<RealTimeLocation>(getActivity(), android.R.layout.simple_list_item_1, locations);
+        realtimeAdapter = new ArrayAdapter<RealTimeLocation>(getActivity(), android.R.layout.simple_list_item_1, realTimeLocations);
         realtimeAutoComplete.setAdapter(realtimeAdapter);
 
         realtimeAutoComplete.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -82,25 +83,14 @@ public class RealtimeSectionFragment extends Fragment {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 // Cancel the old task
                 if (asyncTask != null && asyncTask.getStatus() != AsyncTask.Status.FINISHED) {
-                    asyncTask.cancel(true);
+                    System.out.println("*Cancelling*");
                 }
 
                 if (charSequence.toString().length() >= SEARCH_THRESHOLD) {
-                    try {
-                        Log.d("Fragment", "On text changed thread = " + Thread.currentThread().getName());
-                        // AsyncTask can only be used once, so have to make a new one each time
-                        asyncTask = new GetRealTimeLocationAsyncTask();
+                    // AsyncTask can only be used once, so have to make a new one each time
+                    asyncTask = new GetRealTimeLocationAsyncTask();
 
-                        List<RealTimeLocation> realTimeLocations = asyncTask.execute(new String[]{charSequence.toString()}).get();
-                        locations = realTimeLocations.toArray(new RealTimeLocation[realTimeLocations.size()]);
-
-                        // TODO: 05.11.12 - daniel - shouldn't have to initialize a new ArrayAdapter each time. realtimeAdapter.notifyDataSetChanged() should do the trick, but isn't
-                        realtimeAutoComplete.setAdapter(new ArrayAdapter<RealTimeLocation>(getActivity(), android.R.layout.simple_list_item_1, locations));
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    }
+                    asyncTask.execute(new String[]{charSequence.toString()});
                 }
             }
 
@@ -110,12 +100,22 @@ public class RealtimeSectionFragment extends Fragment {
 
     }
 
-    private class GetRealTimeLocationAsyncTask extends AsyncTask<String, Void, List<RealTimeLocation>> {
+    private class GetRealTimeLocationAsyncTask extends AsyncTask<String, Void, String> {
 
         @Override
-        protected List<RealTimeLocation> doInBackground(String... location) {
-            Log.d("Fragment", "doInBackground thread = " + Thread.currentThread().getName());
-            return ServiceFactory.getRuterService().findRealTimeLocations(location[0].replaceAll(" ", "%20")); // TODO: Replace space in repo
+        protected String doInBackground(String... location) {
+            realTimeLocations = ServiceFactory.getRuterService().findRealTimeLocations(location[0].replaceAll(" ", "%20"));
+            System.out.println("*UPDATED* " + realTimeLocations.size());
+
+            return null;
+        }
+
+        // Need to call notifyDataSetChanged on the UI thread
+        @Override
+        protected void onPostExecute(String result) {
+            // TODO: Why does it not show up on the first update? Triggers at second update
+            realtimeAdapter.addAll(realTimeLocations);
+            realtimeAdapter.notifyDataSetChanged();
         }
     }
 
