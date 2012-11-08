@@ -55,4 +55,7 @@ public class RealTimeData {
 		return timestamp;
 	}
 
+    public String toString() {
+        return "Linje " + line + "\nDestinasjon: " + destination;
+    }
 }
