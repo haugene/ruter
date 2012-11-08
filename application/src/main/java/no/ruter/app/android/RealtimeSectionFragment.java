@@ -38,12 +38,21 @@ public class RealtimeSectionFragment extends Fragment {
     private ListView realTimeResultsListView;
     private List<RealTimeData> realTimeData;
 
+    private ProgressBar progressBar;
+    private ProgressBar autoCompleteProgressBar;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // The last two arguments ensure LayoutParams are inflated
         // properly.
         rootView = inflater.inflate(R.layout.fragment_section_realtime, container, false);
         Bundle args = getArguments();
+
+        progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+        progressBar.setVisibility(ProgressBar.GONE);
+
+        autoCompleteProgressBar = (ProgressBar) rootView.findViewById(R.id.autoCompleteProgressBar);
+        autoCompleteProgressBar.setVisibility(ProgressBar.INVISIBLE);
 
         setUpResultListView();
         setUpAutoCompleteTextViews();
@@ -73,7 +82,9 @@ public class RealtimeSectionFragment extends Fragment {
                     // If we have a selectedLocation do a search on that ID
                     // If not we have to do a places search on the string
                     if(selectedLocation != null) {
+                        progressBar.setVisibility(ProgressBar.VISIBLE);
                         realTimeData = getRealTimeData(selectedLocation.getId());
+                        progressBar.setVisibility(ProgressBar.GONE);
                     }
                     realTimeListViewAdapter.clear();
                     realTimeListViewAdapter.addAll(realTimeData);
@@ -137,6 +148,11 @@ public class RealtimeSectionFragment extends Fragment {
             return null;
         }
 
+        @Override
+        protected void onPreExecute() {
+            autoCompleteProgressBar.setVisibility(ProgressBar.VISIBLE);
+        }
+
         // Need to call notifyDataSetChanged on the UI thread
         @Override
         protected void onPostExecute(String result) {
@@ -144,6 +160,7 @@ public class RealtimeSectionFragment extends Fragment {
             // TODO: Should we clear, or just avoid duplicates?
             realTimeAutoCompleteAdapter.clear();
             realTimeAutoCompleteAdapter.addAll(realTimeLocations);
+            autoCompleteProgressBar.setVisibility(ProgressBar.INVISIBLE);
         }
     }
 

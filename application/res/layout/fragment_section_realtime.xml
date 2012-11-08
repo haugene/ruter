@@ -14,12 +14,19 @@
             android:background="@drawable/list_background"
             android:padding="5dp" >
 
+        <ProgressBar
+                android:id="@+id/autoCompleteProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/realtimeAutoCompleteView"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/realtimeAutoCompleteView" />
+
         <AutoCompleteTextView
             android:id="@+id/realtimeAutoCompleteView"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
             android:ems="10"
             android:hint="stoppested"
             android:inputType="textAutoComplete"
@@ -36,5 +43,13 @@
             android:layout_alignLeft="@+id/relativeLayout1"
             android:layout_below="@+id/relativeLayout1" >
     </ListView>
+
+    <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true" />
 
 </RelativeLayout>
