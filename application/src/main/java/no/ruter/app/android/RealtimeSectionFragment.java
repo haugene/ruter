@@ -1,5 +1,6 @@
 package no.ruter.app.android;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,7 +25,7 @@ public class RealtimeSectionFragment extends Fragment {
 
     private final static int SEARCH_THRESHOLD = 3;
 
-    private RealTimeLocation selectedFromLocation;
+    private RealTimeLocation selectedLocation;
     private List<RealTimeLocation> realTimeLocations;
 
     private GetRealTimeLocationAsyncTask asyncTask;
@@ -51,6 +52,7 @@ public class RealtimeSectionFragment extends Fragment {
     }
 
     private void setUpResultListView() {
+        // TODO: Maybe this should be an ExpandableListView?
         ListView listView = (ListView) rootView.findViewById(R.id.listView1);
 
         realTimeData = new ArrayList<RealTimeData>();
@@ -68,7 +70,11 @@ public class RealtimeSectionFragment extends Fragment {
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 boolean handled = false;
                 if (i == EditorInfo.IME_ACTION_SEARCH) {
-                    realTimeData = getRealTimeData(3010011);
+                    // If we have a selectedLocation do a search on that ID
+                    // If not we have to do a places search on the string
+                    if(selectedLocation != null) {
+                        realTimeData = getRealTimeData(selectedLocation.getId());
+                    }
                     realTimeListViewAdapter.clear();
                     realTimeListViewAdapter.addAll(realTimeData);
                     for (RealTimeData data : realTimeData) {
@@ -91,7 +97,7 @@ public class RealtimeSectionFragment extends Fragment {
 
         realtimeAutoComplete.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectedFromLocation = (RealTimeLocation) parent.getItemAtPosition(position); // TODO: Index out of bounds issue
+                selectedLocation = (RealTimeLocation) parent.getItemAtPosition(position); // TODO: Index out of bounds issue - 08.11.12 - Fixed by clearing the adapter?
             }
         });
 
@@ -100,6 +106,9 @@ public class RealtimeSectionFragment extends Fragment {
             }
 
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                // Clearing the location that might have been set by realTimeAutoComplete.onItemClick
+                selectedLocation = null;
+
                 // Cancel the old task
                 if (asyncTask != null && asyncTask.getStatus() != AsyncTask.Status.FINISHED) {
                     System.out.println("*Cancelling*");
