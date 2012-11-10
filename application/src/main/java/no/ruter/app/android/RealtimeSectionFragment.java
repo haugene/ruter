@@ -1,6 +1,5 @@
 package no.ruter.app.android;
 
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -26,17 +25,21 @@ public class RealtimeSectionFragment extends Fragment {
     private final static int SEARCH_THRESHOLD = 3;
 
     private RealTimeLocation selectedLocation;
-    private List<RealTimeLocation> realTimeLocations;
-
     private GetRealTimeLocationAsyncTask asyncTask;
 
     private ArrayAdapter<RealTimeLocation> realTimeAutoCompleteAdapter;
-    private ArrayAdapter<RealTimeData> realTimeListViewAdapter;
 
+    private ArrayAdapter<RealTimeLocation> selectStationAdapter;
+    private ArrayAdapter<RealTimeData> realTimeListViewAdapter;
     private AutoCompleteTextView realtimeAutoComplete;
 
     private ListView realTimeResultsListView;
+    private ListView selectStationListView;
+
     private List<RealTimeData> realTimeData;
+    private List<RealTimeLocation> realTimeLocations;
+    // Need separate list because another adapter uses it
+    private List<RealTimeLocation> selectRealTimeLocations;
 
     private ProgressBar progressBar;
     private ProgressBar autoCompleteProgressBar;
@@ -54,24 +57,51 @@ public class RealtimeSectionFragment extends Fragment {
         autoCompleteProgressBar = (ProgressBar) rootView.findViewById(R.id.autoCompleteProgressBar);
         autoCompleteProgressBar.setVisibility(ProgressBar.INVISIBLE);
 
-        setUpResultListView();
-        setUpAutoCompleteTextViews();
+        setUpViews();
 
         return rootView;
     }
 
+    private void setUpViews() {
+        setUpResultListView();
+        setUpAutoCompleteTextView();
+        setUpSelectStationListView();
+    }
+
+    private void setUpSelectStationListView() {
+        selectStationListView = (ListView) rootView.findViewById(R.id.selectStationListView);
+
+        selectRealTimeLocations = new ArrayList<RealTimeLocation>();
+
+        selectStationAdapter = new ArrayAdapter<RealTimeLocation>(getActivity(), android.R.layout.simple_list_item_1, selectRealTimeLocations);
+        selectStationAdapter.setNotifyOnChange(true);
+        selectStationListView.setAdapter(selectStationAdapter);
+
+        selectStationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long l) {
+                selectedLocation = (RealTimeLocation) parent.getItemAtPosition(position);
+                selectRealTimeLocations.clear();
+                realTimeData = getRealTimeData(selectedLocation.getId());
+
+                // TODO: Should not have to do this. Da fuk?
+                realTimeListViewAdapter = new ArrayAdapter<RealTimeData>(getActivity(), android.R.layout.simple_list_item_1, realTimeData);
+                realTimeResultsListView.setAdapter(realTimeListViewAdapter);
+            }
+        });
+    }
+
     private void setUpResultListView() {
         // TODO: Maybe this should be an ExpandableListView?
-        ListView listView = (ListView) rootView.findViewById(R.id.listView1);
+        realTimeResultsListView = (ListView) rootView.findViewById(R.id.listView1);
 
         realTimeData = new ArrayList<RealTimeData>();
 
         realTimeListViewAdapter = new ArrayAdapter<RealTimeData>(getActivity(), android.R.layout.simple_list_item_1, realTimeData);
         realTimeListViewAdapter.setNotifyOnChange(true);
-        listView.setAdapter(realTimeListViewAdapter);
+        realTimeResultsListView.setAdapter(realTimeListViewAdapter);
     }
 
-    private void setUpAutoCompleteTextViews() {
+    private void setUpAutoCompleteTextView() {
         realtimeAutoComplete = (AutoCompleteTextView) rootView.findViewById(R.id.realtimeAutoCompleteView);
         realtimeAutoComplete.setThreshold(0); // TODO: Set to SEARCH_THRESHOLD - or maybe keep at 0, but start pulling from the API at 3?
 
@@ -82,17 +112,33 @@ public class RealtimeSectionFragment extends Fragment {
                     // If we have a selectedLocation do a search on that ID
                     // If not we have to do a places search on the string
                     if(selectedLocation != null) {
+                        // TODO: progressBar not working
                         progressBar.setVisibility(ProgressBar.VISIBLE);
+                        selectRealTimeLocations.clear();
                         realTimeData = getRealTimeData(selectedLocation.getId());
                         progressBar.setVisibility(ProgressBar.GONE);
+                    }
+                    else {
+                        // TODO: Replace %20 in repo
+                        // TODO: Exception handling
+                        realTimeLocations = ServiceFactory.getRuterService().findRealTimeLocations(textView.getText().toString().replaceAll(" ", "%20"));
+                        if(realTimeLocations.size() == 0) {
+                            // TODO: Inform user of no match
+                        }
+                        else if(realTimeLocations.size() == 1) {
+                            selectRealTimeLocations.clear();
+                            realTimeData = getRealTimeData(realTimeLocations.get(0).getId());
+                        }
+                        else {
+                            realTimeData.clear();
+                            selectRealTimeLocations.addAll(realTimeLocations);
+                        }
                     }
                     realTimeListViewAdapter.clear();
                     realTimeListViewAdapter.addAll(realTimeData);
                     for (RealTimeData data : realTimeData) {
                         System.out.println(data.getDestination());
-
                     }
-
 
                     handled = true;
                 }
@@ -140,10 +186,12 @@ public class RealtimeSectionFragment extends Fragment {
     }
 
     // TODO: Possible to avoid return type?
+    // TODO: Exception handling
     private class GetRealTimeLocationAsyncTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... location) {
+            // TODO: Replace %20 in repo
             realTimeLocations = ServiceFactory.getRuterService().findRealTimeLocations(location[0].replaceAll(" ", "%20"));
             return null;
         }
