@@ -73,7 +73,7 @@ public class RealtimeSectionFragment extends Fragment {
 
         selectRealTimeLocations = new ArrayList<RealTimeLocation>();
 
-        selectStationAdapter = new ArrayAdapter<RealTimeLocation>(getActivity(), android.R.layout.simple_list_item_1, selectRealTimeLocations);
+        selectStationAdapter = new ArrayAdapter<RealTimeLocation>(getActivity(), R.layout.listview_realtime_data, R.id.text1, selectRealTimeLocations);
         selectStationAdapter.setNotifyOnChange(true);
         selectStationListView.setAdapter(selectStationAdapter);
 
@@ -84,7 +84,7 @@ public class RealtimeSectionFragment extends Fragment {
                 realTimeData = getRealTimeData(selectedLocation.getId());
 
                 // TODO: Should not have to do this. Da fuk?
-                realTimeListViewAdapter = new ArrayAdapter<RealTimeData>(getActivity(), android.R.layout.simple_list_item_1, realTimeData);
+                realTimeListViewAdapter = new ArrayAdapter<RealTimeData>(getActivity(), R.layout.listview_realtime_data, R.id.text1, realTimeData);
                 realTimeResultsListView.setAdapter(realTimeListViewAdapter);
             }
         });
@@ -96,7 +96,7 @@ public class RealtimeSectionFragment extends Fragment {
 
         realTimeData = new ArrayList<RealTimeData>();
 
-        realTimeListViewAdapter = new ArrayAdapter<RealTimeData>(getActivity(), android.R.layout.simple_list_item_1, realTimeData);
+        realTimeListViewAdapter = new ArrayAdapter<RealTimeData>(getActivity(), R.layout.listview_realtime_data, R.id.text1, realTimeData);
         realTimeListViewAdapter.setNotifyOnChange(true);
         realTimeResultsListView.setAdapter(realTimeListViewAdapter);
     }

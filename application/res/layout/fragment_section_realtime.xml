@@ -41,7 +41,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/relativeLayout1"
-            android:layout_below="@+id/relativeLayout1" >
+            android:layout_below="@+id/relativeLayout1"
+            android:paddingRight="8dp">
     </ListView>
 
     <ListView
@@ -49,7 +50,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/relativeLayout1"
-            android:layout_below="@+id/relativeLayout1" >
+            android:layout_below="@+id/relativeLayout1"
+            android:paddingRight="8dp">
     </ListView>
 
     <ProgressBar
