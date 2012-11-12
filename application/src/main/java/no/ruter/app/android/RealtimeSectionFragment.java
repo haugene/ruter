@@ -155,6 +155,10 @@ public class RealtimeSectionFragment extends Fragment {
         realtimeAutoComplete.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectedLocation = (RealTimeLocation) parent.getItemAtPosition(position); // TODO: Index out of bounds issue - 08.11.12 - Fixed by clearing the adapter?
+                realTimeData = getRealTimeData(selectedLocation.getId());
+                // TODO: Should not have to do this. Da fuk?
+                realTimeListViewAdapter = new ArrayAdapter<RealTimeData>(getActivity(), R.layout.listview_realtime_data, R.id.text1, realTimeData);
+                realTimeResultsListView.setAdapter(realTimeListViewAdapter);
             }
         });
 

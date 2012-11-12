@@ -8,9 +8,10 @@
     <TextView
             android:id="@+id/text1"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
+            android:textSize="18dp"
             android:background="@drawable/list_background"/>
 
     <View
