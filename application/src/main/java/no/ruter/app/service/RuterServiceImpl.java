@@ -2,8 +2,11 @@ package no.ruter.app.service;
 
 import java.util.List;
 
+import android.location.Location;
+
 import no.ruter.app.domain.RealTimeData;
 import no.ruter.app.domain.RealTimeLocation;
+import no.ruter.app.repository.LocationRepository;
 import no.ruter.app.repository.RealTimeRepository;
 import no.ruter.app.repository.RepositoryFactory;
 
@@ -17,12 +20,16 @@ public class RuterServiceImpl implements RuterService {
 
 	/** Holds a {@link RealTimeRepository} */
 	private RealTimeRepository realTimeRepository;
+	
+	/** Holds a {@link LocationRepository} */
+	private LocationRepository locationRepository;
 
 	/**
 	 * Default constructor
 	 */
 	public RuterServiceImpl() {
 		realTimeRepository = RepositoryFactory.getRealTimeRepository();
+		locationRepository = RepositoryFactory.getLocationRepository();
 	}
 
 	/**
@@ -36,7 +43,13 @@ public class RuterServiceImpl implements RuterService {
 	 * {@inheritDoc}
 	 */
 	public List<RealTimeLocation> findRealTimeLocationsNearMe() {
-		// TODO Auto-generated method stub
+		
+		Location location = locationRepository.getCurrentLocation();
+		System.out.println("Location:");
+		System.out.println("Accuracy: " + location.getAccuracy());
+		System.out.println("Lat: " + location.getLatitude());
+		System.out.println("Long: " + location.getLongitude());
+		
 		return null;
 	}
 
