@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:background="#e5e5e5" >
+                android:background="#e5e5e5">
 
     <RelativeLayout
             android:id="@+id/relativeLayout1"
@@ -33,6 +33,15 @@
             android:imeOptions="actionSearch"
             />
 
+        <ImageButton
+                android:id="@+id/imageButtonSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@null"
+                android:scaleType="center"
+                android:src="@drawable/ic_search" />
 
     </RelativeLayout>
 
@@ -41,7 +50,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/relativeLayout1"
-            android:layout_below="@+id/relativeLayout1" >
+            android:layout_below="@+id/relativeLayout1"
+            android:paddingRight="8dp">
     </ListView>
 
     <ListView
@@ -49,7 +59,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/relativeLayout1"
-            android:layout_below="@+id/relativeLayout1" >
+            android:layout_below="@+id/relativeLayout1"
+            android:paddingRight="8dp">
     </ListView>
 
     <ProgressBar
