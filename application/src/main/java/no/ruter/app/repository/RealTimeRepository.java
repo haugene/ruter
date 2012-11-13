@@ -2,6 +2,8 @@ package no.ruter.app.repository;
 
 import java.util.List;
 
+import org.apache.commons.codec.EncoderException;
+
 import no.ruter.app.domain.RealTimeData;
 import no.ruter.app.domain.RealTimeLocation;
 
@@ -23,8 +25,9 @@ public interface RealTimeRepository {
 	 * @param query
 	 *            name or partial name of a location
 	 * @return {@link List} of {@link RealTimeLocation} objects. Never null
+	 * @throws EncoderException 
 	 */
-	public List<RealTimeLocation> findLocations(String query);
+	public List<RealTimeLocation> findLocations(String query) throws EncoderException;
 
 	/**
 	 * Calls the GetRealTimeData service of the ruter api.

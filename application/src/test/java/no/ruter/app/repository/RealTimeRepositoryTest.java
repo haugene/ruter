@@ -7,6 +7,7 @@ import java.util.List;
 import no.ruter.app.domain.RealTimeData;
 import no.ruter.app.domain.RealTimeLocation;
 
+import org.apache.commons.codec.EncoderException;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,7 +31,7 @@ public class RealTimeRepositoryTest {
 	}
 
 	@Test
-	public void shouldReturnListOfLocations() {
+	public void shouldReturnListOfLocations() throws EncoderException {
 
 		List<RealTimeLocation> locations = repo.findLocations("skøyen");
 

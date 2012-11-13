@@ -1,6 +1,9 @@
 package no.ruter.app.service;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.codec.EncoderException;
 
 import android.location.Location;
 
@@ -36,7 +39,13 @@ public class RuterServiceImpl implements RuterService {
 	 * {@inheritDoc}
 	 */
 	public List<RealTimeLocation> findRealTimeLocations(String locName) {
-		return realTimeRepository.findLocations(locName);
+		try {
+			return realTimeRepository.findLocations(locName);
+		} catch (EncoderException e) {
+			// TODO Signal error
+			e.printStackTrace();
+		}
+		return new ArrayList<RealTimeLocation>();
 	}
 
 	/**

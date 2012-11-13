@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.codec.EncoderException;
+import org.apache.commons.codec.net.URLCodec;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
@@ -29,16 +31,19 @@ public class RealTimeRepositoryImpl implements RealTimeRepository{
 
 	/**
 	 * {@inheritDoc}
+	 * @throws EncoderException 
 	 */
-	public List<RealTimeLocation> findLocations(String query) {
+	public List<RealTimeLocation> findLocations(String query) throws EncoderException {
 
+		URLCodec urlCodec = new URLCodec("UTF-8");
+		String encodedQuery = urlCodec.encode(query);
 		String service = WEB_SERVICE_HOST_URL + FIND_MATCHES;
 
 		List<RealTimeLocation> locations;
 
 		try {
 
-			JSONObject response = runService(service, query);
+			JSONObject response = runService(service, encodedQuery);
 
 			locations = parseRealTimeLocationsFromResponse(response);
 

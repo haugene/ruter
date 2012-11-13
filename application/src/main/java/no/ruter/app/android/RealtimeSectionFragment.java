@@ -214,8 +214,7 @@ public class RealtimeSectionFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... location) {
-            // TODO: Replace %20 in repo
-            realTimeLocations = ServiceFactory.getRuterService().findRealTimeLocations(location[0].replaceAll(" ", "%20"));
+            realTimeLocations = ServiceFactory.getRuterService().findRealTimeLocations(location[0]);
             return null;
         }
 
