@@ -9,6 +9,7 @@ import no.ruter.app.exception.RepositoryException;
 import no.ruter.app.repository.LocationRepository;
 import no.ruter.app.repository.RealTimeRepository;
 import no.ruter.app.repository.RepositoryFactory;
+import android.content.Context;
 import android.location.Location;
 
 /**
@@ -44,7 +45,7 @@ public class RuterServiceImpl implements RuterService {
 	/**
 	 * {@inheritDoc}
 	 */
-	public List<RealTimeLocation> findRealTimeLocationsNearMe() {
+	public List<RealTimeLocation> findRealTimeLocationsNearMe(Context context) {
 		return new ArrayList<RealTimeLocation>();
 	}
 
@@ -56,9 +57,9 @@ public class RuterServiceImpl implements RuterService {
 		return realTimeRepository.getRealTimeData(id);
 	}
 
-	public String printLocationData() {
+	public String printLocationData(Context context) {
 
-		Location location = locationRepository.getCurrentLocation();
+		Location location = locationRepository.getCurrentLocation(context);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("Accuracy: " + location.getAccuracy() + " | ");

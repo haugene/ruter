@@ -2,6 +2,8 @@ package no.ruter.app.service;
 
 import java.util.List;
 
+import android.content.Context;
+
 import no.ruter.app.domain.RealTimeData;
 import no.ruter.app.domain.RealTimeLocation;
 import no.ruter.app.exception.RepositoryException;
@@ -24,30 +26,39 @@ public interface RuterService {
 	 * @param locName
 	 *            name of location
 	 * @return list of {@link RealTimeLocation}
-	 * @throws RepositoryException 
+	 * @throws RepositoryException
 	 */
-	public List<RealTimeLocation> findRealTimeLocations(String locName) throws RepositoryException;
+	public List<RealTimeLocation> findRealTimeLocations(String locName)
+			throws RepositoryException;
 
 	/**
 	 * Uses the gps/network/wlan location of the device to find a list of nearby
 	 * realtime locations
 	 * 
+	 * @param context
+	 *            context to use for looking up system services
+	 * 
 	 * @return list of {@link RealTimeLocation} that are close
 	 */
-	public List<RealTimeLocation> findRealTimeLocationsNearMe();
+	public List<RealTimeLocation> findRealTimeLocationsNearMe(Context context);
 
-    /**
-     * Retrieves the real time data for the selected location
-     *
-     * @return list of (@link RealTimeData)
-     * @throws RepositoryException
-     */
-    public List<RealTimeData> getRealTimeData(Integer id) throws RepositoryException;
-    
-    /**
-     * Does some magic and returns a string that has information about the location
-     * @return
-     */
-    public String printLocationData();
+	/**
+	 * Retrieves the real time data for the selected location
+	 * 
+	 * @return list of (@link RealTimeData)
+	 * @throws RepositoryException
+	 */
+	public List<RealTimeData> getRealTimeData(Integer id)
+			throws RepositoryException;
+
+	/**
+	 * Does some magic and returns a string that has information about the
+	 * location
+	 * 
+	 * @param context
+	 *            context to use for looking up system services
+	 * @return
+	 */
+	public String printLocationData(Context context);
 
 }

@@ -4,22 +4,18 @@ import no.ruter.app.utils.LocationUtil;
 
 import org.joda.time.DateTime;
 
-import android.app.Service;
 import android.content.Context;
-import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.IBinder;
 
 /**
  * Implementing class of {@link RepositoryFactory}
  * 
  * @author Kristian
- *
  */
-public class LocationRepositoryImpl extends Service implements
+public class LocationRepositoryImpl implements
 		LocationRepository {
 
 	/** Holds the current best location */
@@ -43,18 +39,16 @@ public class LocationRepositoryImpl extends Service implements
 	 * Init {@link LocationUtil} and get reference to {@link LocationManager}
 	 */
 	public LocationRepositoryImpl() {
+		super();
+		
 		// Init util
 		locationUtil = new LocationUtil();
-
-		// Acquire a reference to the system Location Manager
-		locationManager = (LocationManager) this
-				.getSystemService(Context.LOCATION_SERVICE);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Location getCurrentLocation() {
+	public Location getCurrentLocation(Context context) {
 		// Update timestamp for last repo request, this is it!
 		lastRequest = DateTime.now();
 
@@ -63,7 +57,7 @@ public class LocationRepositoryImpl extends Service implements
 		 * location.
 		 */
 		if (locationListener == null) {
-			createAndRegisterLocationListener();
+			createAndRegisterLocationListener(context);
 		}
 
 		// Return the best location we got
@@ -91,8 +85,9 @@ public class LocationRepositoryImpl extends Service implements
 			// Deregister listener
 			locationManager.removeUpdates(locationListener);
 
-			// Remove reference
+			// Remove references
 			locationListener = null;
+			locationManager = null;
 		}
 	}
 
@@ -100,8 +95,13 @@ public class LocationRepositoryImpl extends Service implements
 	 * Creates a {@link LocationListener} and register it with
 	 * {@link LocationManager} Also, read the cached last location in android
 	 */
-	private void createAndRegisterLocationListener() {
+	private void createAndRegisterLocationListener(Context context) {
 		
+
+		// Acquire a reference to the system Location Manager
+		locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+		
+		// Create listener
 		locationListener = createLocationListener();
 
 		// Register the listener with the Location Manager to receive location
@@ -139,12 +139,6 @@ public class LocationRepositoryImpl extends Service implements
 			}
 		};
 		return locationListener;
-	}
-
-	@Override
-	public IBinder onBind(Intent intent) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }
