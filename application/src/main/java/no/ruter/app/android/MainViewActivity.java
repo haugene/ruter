@@ -76,7 +76,7 @@ public class MainViewActivity extends FragmentActivity implements ActionBar.TabL
                 case 2:
                     return new RoutePlannerSectionFragment();
                 default:
-                    return new RoutePlannerSectionFragment();
+                    return new ClosestStopFragment();
             }
         }
 
