@@ -32,12 +32,12 @@ public class RealTimeRepositoryTest {
 	@Test
 	public void shouldReturnListOfLocations() throws RepositoryException {
 		
-		List<RealTimeLocation> locations = repo.findLocations("skøyen");
+		List<RealTimeLocation> locations = repo.findLocations("skÃ¸yen");
 
 		assertEquals("Did not return correct number of hits", 11,
 				locations.size());
 
-		boolean containsElement = "Skøyen [tog]".equalsIgnoreCase(locations
+		boolean containsElement = "SkÃ¸yen [tog]".equalsIgnoreCase(locations
 				.get(0).getName());
 		assertTrue("Did not contain expected element", containsElement);
 
