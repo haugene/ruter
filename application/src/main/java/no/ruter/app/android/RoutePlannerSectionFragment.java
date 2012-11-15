@@ -15,6 +15,7 @@ import android.widget.AutoCompleteTextView;
 import no.ruter.app.domain.RealTimeLocation;
 import no.ruter.app.service.ServiceFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -96,7 +97,8 @@ public class RoutePlannerSectionFragment extends Fragment {
         @Override
         protected List<RealTimeLocation> doInBackground(String... location) {
             Log.d("Fragment", "doInBackground thread = " + Thread.currentThread().getName());
-            return ServiceFactory.getRuterService().findRealTimeLocations(location[0].replaceAll(" ", "%20")); // TODO: Replace space in repo
+//            return ServiceFactory.getRuterService().findRealTimeLocations(location[0].replaceAll(" ", "%20")); // TODO: Replace space in repo
+            return new ArrayList<RealTimeLocation>();
         }
     }
 

@@ -16,8 +16,6 @@ import org.junit.Test;
 /**
  * Test class for {@link RealTimeRepositoryImpl}
  * 
- * TODO: Should mock repository calls
- * 
  * @author Kristian
  * 
  */
@@ -33,7 +31,7 @@ public class RealTimeRepositoryTest {
 
 	@Test
 	public void shouldReturnListOfLocations() throws RepositoryException {
-
+		
 		List<RealTimeLocation> locations = repo.findLocations("skøyen");
 
 		assertEquals("Did not return correct number of hits", 11,

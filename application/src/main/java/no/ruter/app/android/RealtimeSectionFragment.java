@@ -14,6 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import no.ruter.app.domain.RealTimeData;
 import no.ruter.app.domain.RealTimeLocation;
+import no.ruter.app.exception.RepositoryException;
 import no.ruter.app.service.ServiceFactory;
 
 import java.util.ArrayList;
@@ -106,7 +107,7 @@ public class RealtimeSectionFragment extends Fragment {
 
     private void setUpAutoCompleteTextView() {
         realtimeAutoComplete = (AutoCompleteTextView) rootView.findViewById(R.id.realtimeAutoCompleteView);
-        realtimeAutoComplete.setThreshold(0); // TODO: Set to SEARCH_THRESHOLD - or maybe keep at 0, but start pulling from the API at 3?
+        realtimeAutoComplete.setThreshold(SEARCH_THRESHOLD); // TODO: Set to SEARCH_THRESHOLD - or maybe keep at 0, but start pulling from the API at 3?
 
         realtimeAutoComplete.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
@@ -122,23 +123,28 @@ public class RealtimeSectionFragment extends Fragment {
                         progressBar.setVisibility(ProgressBar.GONE);
                     }
                     else {
-                        // TODO: Replace %20 in repo
                         // TODO: Exception handling
-                        realTimeLocations = ServiceFactory.getRuterService().findRealTimeLocations(textView.getText().toString().replaceAll(" ", "%20"));
+                        realTimeLocations.clear();
+                        try {
+                            realTimeLocations.addAll(ServiceFactory.getRuterService().findRealTimeLocations(textView.getText().toString()));
+                        } catch (RepositoryException e) {
+                            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                        }
                         if(realTimeLocations.size() == 0) {
                             // TODO: Inform user of no match
                         }
                         else if(realTimeLocations.size() == 1) {
                             selectRealTimeLocations.clear();
-                            realTimeData = getRealTimeData(realTimeLocations.get(0).getId());
+                            realTimeData.clear();
+                            realTimeData.addAll(getRealTimeData(realTimeLocations.get(0).getId()));
                         }
                         else {
                             realTimeData.clear();
                             selectRealTimeLocations.addAll(realTimeLocations);
                         }
                     }
-                    realTimeListViewAdapter.clear();
-                    realTimeListViewAdapter.addAll(realTimeData);
+//                    realTimeListViewAdapter.clear();
+//                    realTimeListViewAdapter.addAll(realTimeData);
                     for (RealTimeData data : realTimeData) {
                         System.out.println(data.getDestination());
                     }
@@ -157,9 +163,8 @@ public class RealtimeSectionFragment extends Fragment {
 
         realtimeAutoComplete.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectedLocation = (RealTimeLocation) parent.getItemAtPosition(position); // TODO: Index out of bounds issue - 08.11.12 - Fixed by clearing the adapter?
+                selectedLocation = (RealTimeLocation) parent.getItemAtPosition(position);
                 //realTimeData = getRealTimeData(selectedLocation.getId());
-                // TODO: Should not have to do this. Da fuk?
 
                 // Cancel the old task
                 if (getRealTimeDataAsyncTask != null && getRealTimeDataAsyncTask.getStatus() != AsyncTask.Status.FINISHED) {
@@ -214,7 +219,11 @@ public class RealtimeSectionFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... location) {
-            realTimeLocations = ServiceFactory.getRuterService().findRealTimeLocations(location[0]);
+            try {
+                realTimeLocations = ServiceFactory.getRuterService().findRealTimeLocations(location[0]);
+            } catch (RepositoryException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
             return null;
         }
 
@@ -241,7 +250,12 @@ public class RealtimeSectionFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... id) {
-            realTimeData = ServiceFactory.getRuterService().getRealTimeData(Integer.parseInt(id[0]));
+            realTimeData.clear();
+            try {
+                realTimeData.addAll(ServiceFactory.getRuterService().getRealTimeData(Integer.parseInt(id[0])));
+            } catch (RepositoryException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
             return null;
         }
 
@@ -256,13 +270,18 @@ public class RealtimeSectionFragment extends Fragment {
             // TODO: Why does it not show up on the first update? Triggers at second update
             // TODO: Should we clear, or just avoid duplicates?
             progressBar.setVisibility(ProgressBar.INVISIBLE);
-            realTimeListViewAdapter = new ArrayAdapter<RealTimeData>(getActivity(), R.layout.listview_realtime_data, R.id.text1, realTimeData);
-            realTimeResultsListView.setAdapter(realTimeListViewAdapter);
         }
     }
 
     private List<RealTimeData> getRealTimeData(Integer id) {
-        return ServiceFactory.getRuterService().getRealTimeData(id);
+        List<RealTimeData> realTimeData = new ArrayList<RealTimeData>();
+
+        try {
+            realTimeData = ServiceFactory.getRuterService().getRealTimeData(id);
+        } catch (RepositoryException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        return realTimeData;
     }
 
 }
