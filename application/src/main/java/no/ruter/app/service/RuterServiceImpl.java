@@ -2,7 +2,9 @@ package no.ruter.app.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import no.ruter.app.domain.Platform;
 import no.ruter.app.domain.RealTimeData;
 import no.ruter.app.domain.RealTimeLocation;
 import no.ruter.app.exception.RepositoryException;
@@ -55,6 +57,12 @@ public class RuterServiceImpl implements RuterService {
 	public List<RealTimeData> getRealTimeData(Integer id)
 			throws RepositoryException {
 		return realTimeRepository.getRealTimeData(id);
+	}
+
+	public Map<Platform, List<RealTimeData>> getRealTimeDataByPlatform(
+			Integer id) {
+		// TODO Kristian: Implement
+		return null;
 	}
 
 	public String printLocationData(Context context) {
