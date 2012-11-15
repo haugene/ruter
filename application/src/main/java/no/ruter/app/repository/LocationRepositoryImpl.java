@@ -1,25 +1,150 @@
 package no.ruter.app.repository;
 
+import no.ruter.app.utils.LocationUtil;
+
+import org.joda.time.DateTime;
+
+import android.app.Service;
+import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Bundle;
+import android.os.IBinder;
 
+/**
+ * Implementing class of {@link RepositoryFactory}
+ * 
+ * @author Kristian
+ *
+ */
+public class LocationRepositoryImpl extends Service implements
+		LocationRepository {
 
+	/** Holds the current best location */
+	private Location bestLocation;
 
-public class LocationRepositoryImpl implements LocationRepository {
-	
+	/** Holds the utility class for location calculations */
+	private LocationUtil locationUtil;
+
+	/** Holds the {@link LocationManager} object */
+	private LocationManager locationManager;
+
+	/** Holds the {@link LocationListener} object */
+	private LocationListener locationListener;
+
+	/** Holds a timestamp from last repository call */
+	private DateTime lastRequest;
+
+	/**
+	 * Default constructor.
+	 * 
+	 * Init {@link LocationUtil} and get reference to {@link LocationManager}
+	 */
+	public LocationRepositoryImpl() {
+		// Init util
+		locationUtil = new LocationUtil();
+
+		// Acquire a reference to the system Location Manager
+		locationManager = (LocationManager) this
+				.getSystemService(Context.LOCATION_SERVICE);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public Location getCurrentLocation() {
-		
-		LocationEngine locationEngine = RepositoryFactory.getLocationEngine();
-		
-		// Possibly wait for a location
-		while(locationEngine.getBestLocation() == null){
-			try {
-				Thread.sleep(2);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+		// Update timestamp for last repo request, this is it!
+		lastRequest = DateTime.now();
+
+		/*
+		 * If we have no listener, create it and register it. Get cached
+		 * location.
+		 */
+		if (locationListener == null) {
+			createAndRegisterLocationListener();
 		}
+
+		// Return the best location we got
+		return bestLocation;
+	}
+
+	/**
+	 * This method is executed every time android gives us new data
+	 * 
+	 * @param location
+	 *            from android
+	 */
+	private void makeUseOfLocation(Location location) {
+
+		// Update our bet location if this one is better
+		if (locationUtil.isBetterLocation(location, bestLocation)) {
+			bestLocation = location;
+		}
+
+		/*
+		 * If we have been probing for 5 minutes without timer reset, stop
+		 */
+		if (lastRequest.isBefore(DateTime.now().minusMinutes(5))) {
+
+			// Deregister listener
+			locationManager.removeUpdates(locationListener);
+
+			// Remove reference
+			locationListener = null;
+		}
+	}
+
+	/**
+	 * Creates a {@link LocationListener} and register it with
+	 * {@link LocationManager} Also, read the cached last location in android
+	 */
+	private void createAndRegisterLocationListener() {
 		
-		return locationEngine.getBestLocation();
+		locationListener = createLocationListener();
+
+		// Register the listener with the Location Manager to receive location
+		// updates
+		locationManager.requestLocationUpdates(
+				LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+
+		// Get the last known, maybe cached, location
+		bestLocation = locationManager
+				.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+	}
+
+	/**
+	 * Creates a {@link LocationListener} that calls our makeUseOfLocation()
+	 * when a new location is avaliable
+	 * 
+	 * @return {@link LocationListener} to register in the manager
+	 */
+	private LocationListener createLocationListener() {
+		// Define a listener that responds to location updates
+		LocationListener locationListener = new LocationListener() {
+			public void onLocationChanged(Location location) {
+				makeUseOfLocation(location);
+			}
+
+			public void onProviderEnabled(String provider) {
+			}
+
+			public void onProviderDisabled(String provider) {
+			}
+
+			public void onStatusChanged(String provider, int status,
+					Bundle extras) {
+
+			}
+		};
+		return locationListener;
+	}
+
+	@Override
+	public IBinder onBind(Intent intent) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

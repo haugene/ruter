@@ -1,13 +1,14 @@
 package no.ruter.app.repository;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
 import no.ruter.app.domain.RealTimeData;
 import no.ruter.app.domain.RealTimeLocation;
+import no.ruter.app.exception.RepositoryException;
 
-import org.apache.commons.codec.EncoderException;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,7 +32,7 @@ public class RealTimeRepositoryTest {
 	}
 
 	@Test
-	public void shouldReturnListOfLocations() throws EncoderException {
+	public void shouldReturnListOfLocations() throws RepositoryException {
 
 		List<RealTimeLocation> locations = repo.findLocations("skøyen");
 
@@ -45,17 +46,16 @@ public class RealTimeRepositoryTest {
 	}
 
 	@Test
-	public void shouldGetRealTimeDataGivenValidLocationId() {
+	public void shouldGetRealTimeDataGivenValidLocationId() throws RepositoryException {
 
 		// Query real time data for welhavensgate
-		// TODO: Mock this. Will fail if you're coding late ;)
 		List<RealTimeData> realTimeData = repo.getRealTimeData(3010211);
 		assertTrue("No real time data response", realTimeData.size() > 0);
 
 	}
 
 	@Test
-	public void realTimeDataShouldContainExpectedArrivalTimeAndTimeStamp() {
+	public void realTimeDataShouldContainExpectedArrivalTimeAndTimeStamp() throws RepositoryException {
 
 		// Query for welhavensgate
 		List<RealTimeData> realTimeData = repo.getRealTimeData(3010211);
@@ -80,5 +80,14 @@ public class RealTimeRepositoryTest {
 							&& realTime.getTimestamp().isAfter(
 									DateTime.now().minusHours(1)));
 		}
+	}
+	
+	@Test
+	public void realTimeDataShouldContainVehicleTypeAndPlatformName() throws RepositoryException{
+		List<RealTimeData> realTimeData = repo.getRealTimeData(3010211);
+		assertTrue("Did not get any results", realTimeData.size() > 0);
+		
+		assertTrue("VehicleType was not set", realTimeData.get(0).getVehicleType() != null);
+		assertTrue("PlatformName was not set", realTimeData.get(0).getPlatformName() != null);
 	}
 }

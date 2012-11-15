@@ -6,6 +6,7 @@ import java.util.List;
 
 import no.ruter.app.domain.RealTimeData;
 import no.ruter.app.domain.RealTimeLocation;
+import no.ruter.app.enums.VehicleType;
 import no.ruter.app.exception.RepositoryException;
 
 import org.apache.commons.codec.EncoderException;
@@ -129,9 +130,11 @@ public class RealTimeRepositoryImpl implements RealTimeRepository{
 		String destination = data.getString("DestinationName");
 		DateTime expectedArrivalTime = parseDate(data.getString("ExpectedArrivalTime"));
 		DateTime timestamp = parseDate(data.getString("RecordedAtTime"));
+		String platformName = data.getString("DeparturePlatformName");
+		VehicleType vehicleType = VehicleType.valueOf(data.getString("VehicleMode"));
 
 		return new RealTimeData(line, destination, expectedArrivalTime,
-				timestamp);
+				timestamp, platformName, vehicleType);
 
 	}
 

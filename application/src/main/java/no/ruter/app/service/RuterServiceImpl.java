@@ -1,5 +1,6 @@
 package no.ruter.app.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import no.ruter.app.domain.RealTimeData;
@@ -44,14 +45,7 @@ public class RuterServiceImpl implements RuterService {
 	 * {@inheritDoc}
 	 */
 	public List<RealTimeLocation> findRealTimeLocationsNearMe() {
-
-		Location location = locationRepository.getCurrentLocation();
-		System.out.println("Location:");
-		System.out.println("Accuracy: " + location.getAccuracy());
-		System.out.println("Lat: " + location.getLatitude());
-		System.out.println("Long: " + location.getLongitude());
-
-		return null;
+		return new ArrayList<RealTimeLocation>();
 	}
 
 	/**
@@ -60,6 +54,18 @@ public class RuterServiceImpl implements RuterService {
 	public List<RealTimeData> getRealTimeData(Integer id)
 			throws RepositoryException {
 		return realTimeRepository.getRealTimeData(id);
+	}
+
+	public String printLocationData() {
+
+		Location location = locationRepository.getCurrentLocation();
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("Accuracy: " + location.getAccuracy() + " | ");
+		sb.append("Lat: " + location.getLatitude() + " | ");
+		sb.append("Long: " + location.getLongitude());
+		
+		return sb.toString();
 	}
 
 }

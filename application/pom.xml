@@ -38,10 +38,17 @@
 			<artifactId>support-v4</artifactId>
 			<version>r7</version>
 		</dependency>
+		
+		<!-- Apache commons tools(URL encoder and StringUtils) -->
 		<dependency>
     		<groupId>commons-codec</groupId>
 		    <artifactId>commons-codec</artifactId>
 		    <version>1.2</version>
+		</dependency>
+		<dependency>
+		    <groupId>commons-lang</groupId>
+		    <artifactId>commons-lang</artifactId>
+		    <version>2.4</version>
 		</dependency>
 	</dependencies>
 	<build>

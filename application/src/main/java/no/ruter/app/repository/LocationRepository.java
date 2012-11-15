@@ -11,6 +11,11 @@ import android.location.Location;
  */
 public interface LocationRepository {
 	
+	/**
+	 * Method for getting the current best location
+	 * 
+	 * @return {@link Location} best location
+	 */
 	public Location getCurrentLocation();
 
 }

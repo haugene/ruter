@@ -43,5 +43,11 @@ public interface RuterService {
      * @throws RepositoryException
      */
     public List<RealTimeData> getRealTimeData(Integer id) throws RepositoryException;
+    
+    /**
+     * Does some magic and returns a string that has information about the location
+     * @return
+     */
+    public String printLocationData();
 
 }

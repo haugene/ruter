@@ -1,5 +1,7 @@
 package no.ruter.app.domain;
 
+import no.ruter.app.enums.VehicleType;
+
 import org.joda.time.DateTime;
 
 /**
@@ -18,14 +20,18 @@ public class RealTimeData {
 	 * @param aimedArrivalTime
 	 * @param expectedArrivalTime
 	 * @param timestamp
+	 * @param vehicleType 
+	 * @param platformName 
 	 */
 	public RealTimeData(String line, String destination,
-			DateTime expectedArrivalTime, DateTime timestamp) {
+			DateTime expectedArrivalTime, DateTime timestamp, String platformName, VehicleType vehicleType) {
 		super();
 		this.line = line;
 		this.destination = destination;
 		this.expectedArrivalTime = expectedArrivalTime;
 		this.timestamp = timestamp;
+		this.setPlatformName(platformName);
+		this.setVehicleType(vehicleType);
 	}
 
 	/*
@@ -35,6 +41,8 @@ public class RealTimeData {
 	private String destination;
 	private DateTime expectedArrivalTime;
 	private DateTime timestamp;
+	private String platformName;
+	private VehicleType vehicleType;
 
 	/*
 	 * Getters and setters
@@ -55,7 +63,23 @@ public class RealTimeData {
 		return timestamp;
 	}
 
-    public String toString() {
+    public String getPlatformName() {
+		return platformName;
+	}
+
+	public void setPlatformName(String platformName) {
+		this.platformName = platformName;
+	}
+
+	public VehicleType getVehicleType() {
+		return vehicleType;
+	}
+
+	public void setVehicleType(VehicleType vehicleType) {
+		this.vehicleType = vehicleType;
+	}
+
+	public String toString() {
         return "Linje " + line + "\nDestinasjon: " + destination;
     }
 }

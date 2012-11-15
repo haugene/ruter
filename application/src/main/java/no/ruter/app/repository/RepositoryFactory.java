@@ -9,7 +9,6 @@ package no.ruter.app.repository;
 public class RepositoryFactory {
 
 	private static RealTimeRepository realTimeRepository;
-	private static LocationEngine locationEngine;
 	private static LocationRepository locationRepository;
 
 	public static RealTimeRepository getRealTimeRepository() {
@@ -28,21 +27,4 @@ public class RepositoryFactory {
 		}
 		return locationRepository;
 	}
-
-	public static LocationEngine getLocationEngine() {
-
-		if (locationEngine == null) {
-			locationEngine = new LocationEngine();
-			new Thread(locationEngine).start();
-		}
-		return locationEngine;
-	}
-
-	/**
-	 * The {@link LocationEngine} object itself calls this method when it stops
-	 */
-	public static void locationEngineStopped() {
-		locationEngine = null;
-	}
-
 }
