@@ -4,14 +4,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import no.ruter.app.domain.RealTimeData;
+import no.ruter.app.domain.RealTimeLocation;
+import no.ruter.app.exception.RepositoryException;
+
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.net.URLCodec;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
-import no.ruter.app.domain.RealTimeData;
-import no.ruter.app.domain.RealTimeLocation;
-import no.ruter.app.exception.RepositoryException;
 import us.monoid.json.JSONArray;
 import us.monoid.json.JSONException;
 import us.monoid.json.JSONObject;
@@ -32,29 +33,32 @@ public class RealTimeRepositoryImpl implements RealTimeRepository{
 	/**
 	 * {@inheritDoc}
 	 * @throws EncoderException 
+	 * @throws RepositoryException 
 	 */
-	public List<RealTimeLocation> findLocations(String query) throws EncoderException {
+	public List<RealTimeLocation> findLocations(String query) throws RepositoryException {
 
-		URLCodec urlCodec = new URLCodec("UTF-8");
-		String encodedQuery = urlCodec.encode(query);
+		/*
+		 * Encode the query string.
+		 * If it fails, return an empty list for invalid query
+		 */
+		String encodedQuery;
+		try {
+			URLCodec urlCodec = new URLCodec("UTF-8");
+			encodedQuery = urlCodec.encode(query);
+		} catch (EncoderException ee) {
+			return new ArrayList<RealTimeLocation>();
+		}
+		
 		String service = WEB_SERVICE_HOST_URL + FIND_MATCHES;
-
 		List<RealTimeLocation> locations;
 
 		try {
 
 			JSONObject response = runService(service, encodedQuery);
-
 			locations = parseRealTimeLocationsFromResponse(response);
 
 		} catch (Exception e) {
-			/*
-			 * TODO: kristian : 28.10.2012 : We should maybe try to signal that
-			 * there was an error. So that it differs from the
-			 * "no hits matching that name" case. Custom RuntimeException?
-			 */
-			e.printStackTrace();
-			return new ArrayList<RealTimeLocation>();
+			throw new RepositoryException("Failed to find locations for query string: " + query);
 		}
 
 		// Return the list
@@ -64,15 +68,15 @@ public class RealTimeRepositoryImpl implements RealTimeRepository{
 
 	/**
 	 * {@inheritDoc}
+	 * @throws RepositoryException 
 	 */
-	public List<RealTimeData> getRealTimeData(Integer id) {
+	public List<RealTimeData> getRealTimeData(Integer id) throws RepositoryException {
 
 		String service = WEB_SERVICE_HOST_URL + GET_DATA;
 
 		try {
 
 			JSONObject response = runService(service, id.toString());
-
 			return parseRealTimeDataFromResponse(response);
 
 		} catch (Exception e) {

@@ -4,6 +4,7 @@ import java.util.List;
 
 import no.ruter.app.domain.RealTimeData;
 import no.ruter.app.domain.RealTimeLocation;
+import no.ruter.app.exception.RepositoryException;
 
 /**
  * A common service class.
@@ -23,8 +24,9 @@ public interface RuterService {
 	 * @param locName
 	 *            name of location
 	 * @return list of {@link RealTimeLocation}
+	 * @throws RepositoryException 
 	 */
-	public List<RealTimeLocation> findRealTimeLocations(String locName);
+	public List<RealTimeLocation> findRealTimeLocations(String locName) throws RepositoryException;
 
 	/**
 	 * Uses the gps/network/wlan location of the device to find a list of nearby
@@ -38,7 +40,8 @@ public interface RuterService {
      * Retrieves the real time data for the selected location
      *
      * @return list of (@link RealTimeData)
+     * @throws RepositoryException
      */
-    public List<RealTimeData> getRealTimeData(Integer id);
+    public List<RealTimeData> getRealTimeData(Integer id) throws RepositoryException;
 
 }

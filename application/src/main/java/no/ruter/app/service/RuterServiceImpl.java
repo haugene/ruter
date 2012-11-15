@@ -1,17 +1,14 @@
 package no.ruter.app.service;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.commons.codec.EncoderException;
-
-import android.location.Location;
 
 import no.ruter.app.domain.RealTimeData;
 import no.ruter.app.domain.RealTimeLocation;
+import no.ruter.app.exception.RepositoryException;
 import no.ruter.app.repository.LocationRepository;
 import no.ruter.app.repository.RealTimeRepository;
 import no.ruter.app.repository.RepositoryFactory;
+import android.location.Location;
 
 /**
  * Implements the {@link RealTimeRepository} interface
@@ -23,7 +20,7 @@ public class RuterServiceImpl implements RuterService {
 
 	/** Holds a {@link RealTimeRepository} */
 	private RealTimeRepository realTimeRepository;
-	
+
 	/** Holds a {@link LocationRepository} */
 	private LocationRepository locationRepository;
 
@@ -38,35 +35,31 @@ public class RuterServiceImpl implements RuterService {
 	/**
 	 * {@inheritDoc}
 	 */
-	public List<RealTimeLocation> findRealTimeLocations(String locName) {
-		try {
-			return realTimeRepository.findLocations(locName);
-		} catch (EncoderException e) {
-			// TODO Signal error
-			e.printStackTrace();
-		}
-		return new ArrayList<RealTimeLocation>();
+	public List<RealTimeLocation> findRealTimeLocations(String locName)
+			throws RepositoryException {
+		return realTimeRepository.findLocations(locName);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public List<RealTimeLocation> findRealTimeLocationsNearMe() {
-		
+
 		Location location = locationRepository.getCurrentLocation();
 		System.out.println("Location:");
 		System.out.println("Accuracy: " + location.getAccuracy());
 		System.out.println("Lat: " + location.getLatitude());
 		System.out.println("Long: " + location.getLongitude());
-		
+
 		return null;
 	}
 
-    /**
-     * {@inheritDoc}
-     */
-    public List<RealTimeData> getRealTimeData(Integer id) {
-        return realTimeRepository.getRealTimeData(id);
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public List<RealTimeData> getRealTimeData(Integer id)
+			throws RepositoryException {
+		return realTimeRepository.getRealTimeData(id);
+	}
 
 }
