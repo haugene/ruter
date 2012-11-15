@@ -1,0 +1,170 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#e5e5e5"
+                tools:context=".MainActivity" >
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="5dp"
+            android:background="@drawable/list_background"
+            android:paddingBottom="10dp" >
+
+        <TextView
+                android:id="@+id/textViewLocationName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="12dp"
+                android:text="Nationaltheateret"
+                android:textColor="#404040"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:typeface="normal" />
+
+        <View
+                android:id="@+id/view1"
+                android:layout_width="fill_parent"
+                android:layout_height="1dip"
+                android:layout_below="@+id/textViewLocationName"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="7dp"
+                android:layout_marginRight="7dp"
+                android:layout_marginTop="5dp"
+                android:background="#e5e5e5" />
+
+        <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignRight="@+id/view1"
+                android:maxHeight="24dp"
+                android:maxWidth="24dp"
+                android:src="@drawable/icon_metro" />
+
+        <TextView
+                android:id="@+id/textViewDestinationLineNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/textViewLocationName"
+                android:layout_below="@+id/view1"
+                android:text="5 "
+                android:textColor="#707070"
+                android:textSize="18sp"
+                android:textStyle="normal"
+                android:typeface="normal" />
+
+        <TextView
+                android:id="@+id/textViewDestinationName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/textViewDestinationLineNumber"
+                android:layout_alignBottom="@+id/textViewDestinationLineNumber"
+                android:layout_toRightOf="@+id/textViewDestinationLineNumber"
+                android:text="Sognsvann"
+                android:textColor="#707070"
+                android:textSize="18sp"
+                android:textStyle="normal"
+                android:typeface="normal" />
+
+        <TextView
+                android:id="@+id/textViewArrivalTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/textViewDestinationName"
+                android:layout_alignBottom="@+id/textViewDestinationName"
+                android:layout_toRightOf="@+id/textViewDestinationName"
+                android:text=" 5 min"
+                android:textColor="#FC6868"
+                android:textSize="18sp"
+                android:textStyle="normal"
+                android:typeface="normal" />
+
+        <TextView
+                android:id="@+id/textViewArrivalTimeScroller"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/textViewDestinationLineNumber"
+                android:layout_below="@+id/textViewDestinationLineNumber"
+                android:layout_marginTop="5dp"
+                android:text="12 Grefsen 8 min   13 Disen 22:29   11 Storo 22:31"
+                android:textColor="#FC6868"
+                android:textSize="12sp"
+                android:textStyle="normal"
+                android:typeface="normal" />
+
+        <TextView
+                android:id="@+id/textViewArrivalTime222"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/textViewDestinationName222"
+                android:layout_alignBottom="@+id/textViewDestinationName222"
+                android:layout_toRightOf="@+id/textViewDestinationName222"
+                android:text=" nå"
+                android:textColor="#FC6868"
+                android:textSize="18sp"
+                android:textStyle="normal"
+                android:typeface="normal" />
+
+        <TextView
+                android:id="@+id/textViewDestinationLineNumber222"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textViewArrivalTimeScroller"
+                android:layout_toLeftOf="@+id/textViewDestinationName"
+                android:text="2 "
+                android:textColor="#707070"
+                android:textSize="18sp"
+                android:textStyle="normal"
+                android:typeface="normal"
+                android:layout_marginTop="15dp" />
+
+        <TextView
+                android:id="@+id/textViewDestinationName222"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/textViewDestinationLineNumber222"
+                android:layout_alignBottom="@+id/textViewDestinationLineNumber222"
+                android:layout_toLeftOf="@+id/textViewArrivalTime"
+                android:text="Majorstuen"
+                android:textColor="#707070"
+                android:textSize="18sp"
+                android:textStyle="normal"
+                android:typeface="normal"
+                />
+
+        <TextView
+                android:id="@+id/textViewArrivalTimeScroller222"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/textViewDestinationLineNumber222"
+                android:layout_marginTop="5dp"
+                android:layout_below="@+id/textViewArrivalTime222"
+                android:text="30 Nydalen 2 min   18 Rikshospitalet 22:35   20 Skøye"
+                android:textColor="#FC6868"
+                android:textSize="12sp"
+                android:textStyle="normal"
+                android:typeface="normal" />
+
+        <View
+                android:id="@+id/View01"
+                android:layout_width="fill_parent"
+                android:layout_height="1dip"
+                android:layout_above="@+id/textViewArrivalTime222"
+                android:layout_alignParentLeft="true"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="7dp"
+                android:layout_marginRight="7dp"
+                android:layout_marginTop="5dp"
+                android:background="#e5e5e5"  />
+
+    </RelativeLayout>
+
+</RelativeLayout>
