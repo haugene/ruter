@@ -7,6 +7,7 @@ import java.util.List;
 import no.ruter.app.domain.RealTimeData;
 import no.ruter.app.domain.RealTimeLocation;
 
+import no.ruter.app.exception.RepositoryException;
 import org.apache.commons.codec.EncoderException;
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -31,21 +32,21 @@ public class RealTimeRepositoryTest {
 	}
 
 	@Test
-	public void shouldReturnListOfLocations() throws EncoderException {
+	public void shouldReturnListOfLocations() throws EncoderException, RepositoryException {
 
-		List<RealTimeLocation> locations = repo.findLocations("skøyen");
+		List<RealTimeLocation> locations = repo.findLocations("skï¿½yen");
 
 		assertEquals("Did not return correct number of hits", 11,
 				locations.size());
 
-		boolean containsElement = "Skøyen [tog]".equalsIgnoreCase(locations
+		boolean containsElement = "Skï¿½yen [tog]".equalsIgnoreCase(locations
 				.get(0).getName());
 		assertTrue("Did not contain expected element", containsElement);
 
 	}
 
 	@Test
-	public void shouldGetRealTimeDataGivenValidLocationId() {
+	public void shouldGetRealTimeDataGivenValidLocationId() throws RepositoryException {
 
 		// Query real time data for welhavensgate
 		// TODO: Mock this. Will fail if you're coding late ;)
@@ -55,7 +56,7 @@ public class RealTimeRepositoryTest {
 	}
 
 	@Test
-	public void realTimeDataShouldContainExpectedArrivalTimeAndTimeStamp() {
+	public void realTimeDataShouldContainExpectedArrivalTimeAndTimeStamp() throws RepositoryException {
 
 		// Query for welhavensgate
 		List<RealTimeData> realTimeData = repo.getRealTimeData(3010211);
