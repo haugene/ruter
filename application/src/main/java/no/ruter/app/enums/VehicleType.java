@@ -2,6 +2,7 @@ package no.ruter.app.enums;
 
 public enum VehicleType {
 	
-	TRAM, BUS, TRAIN, BOAT
+	// TODO: Check what the ruter-name of boat is...
+	TRAM, BUS, RAIL, BOAT, METRO
 
 }
