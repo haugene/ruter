@@ -68,34 +68,34 @@ public class RuterServiceTest {
 		}
 	}
 	
-//	@Test
-//	public void shouldPutAllEntriesInSamePlatformWhenEqual() throws RepositoryException {
-//
-//		/*
-//		 * Given
-//		 */
-//		List<RealTimeData> data = new ArrayList<RealTimeData>();
-//
-//		// Add a couple of real time data
-//		data.add(new RealTimeDataBuilder() //
-//				.withPlatformName("1") //
-//				.build());
-//		data.add(new RealTimeDataBuilder() //
-//				.withPlatformName("1") //
-//				.build());
-//
-//		when(realTimeRepository.getRealTimeData(anyInt())).thenReturn(data);
-//
-//		/*
-//		 * When
-//		 */
-//		List<Platform> platforms = ruterService
-//				.getRealTimeDataByPlatform(new Integer(1337));
-//
-//		/*
-//		 * Then
-//		 */
-//		assertTrue("Should have one platform", platforms.size() == 1);
-//		assertTrue("Platform should have two entries", platforms.get(0).getDepartures().size() == 2);
-//	}
+	@Test
+	public void shouldPutAllEntriesInSamePlatformWhenEqual() throws RepositoryException {
+
+		/*
+		 * Given
+		 */
+		List<RealTimeData> data = new ArrayList<RealTimeData>();
+
+		// Add a couple of real time data
+		data.add(new RealTimeDataBuilder() //
+				.withPlatformName("1") //
+				.build());
+		data.add(new RealTimeDataBuilder() //
+				.withPlatformName("1") //
+				.build());
+
+		when(realTimeRepository.getRealTimeData(anyInt())).thenReturn(data);
+
+		/*
+		 * When
+		 */
+		List<Platform> platforms = ruterService
+				.getRealTimeDataByPlatform(new Integer(1337));
+
+		/*
+		 * Then
+		 */
+		assertTrue("Should have one platform", platforms.size() == 1);
+		assertTrue("Platform should have two entries", platforms.get(0).getDepartures().size() == 2);
+	}
 }
