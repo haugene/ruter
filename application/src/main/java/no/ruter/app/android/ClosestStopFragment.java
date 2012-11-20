@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 public class ClosestStopFragment extends Fragment {
 
@@ -17,6 +18,8 @@ public class ClosestStopFragment extends Fragment {
         // properly.
         rootView = inflater.inflate(R.layout.fragment_section_closest_stop, container, false);
         Bundle args = getArguments();
+
+        TextView textView = (TextView) rootView.findViewById(R.id.textView1);
 
         return rootView;
     }
