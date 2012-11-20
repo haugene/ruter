@@ -4,21 +4,94 @@
                 android:layout_height="match_parent"
                 android:background="#e5e5e5">
 
-
-    <TextView
-            android:id="@+id/text1"
+    <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:textSize="18dp"
-            android:background="@drawable/list_background"/>
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="5dp"
+            android:background="@drawable/list_background"
+            android:paddingBottom="10dp" >
 
-    <View
-            android:id="@+id/view"
-            android:layout_width="fill_parent"
-            android:layout_height="5dp"
-            android:layout_below="@id/text1"
-            />
+        <TextView
+                android:id="@+id/textViewPlatformName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="12dp"
+                android:textColor="#404040"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:typeface="normal" />
+
+        <View
+                android:id="@+id/view1"
+                android:layout_width="fill_parent"
+                android:layout_height="1dip"
+                android:layout_below="@+id/textViewPlatformName"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="7dp"
+                android:layout_marginRight="7dp"
+                android:layout_marginTop="5dp"
+                android:background="#e5e5e5" />
+
+        <ImageView
+                android:id="@+id/imageViewVehicleType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignRight="@+id/view1"
+                android:maxHeight="24dp"
+                android:maxWidth="24dp" />
+
+        <TextView
+                android:id="@+id/textViewLineNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/textViewPlatformName"
+                android:layout_below="@+id/view1"
+                android:textColor="#707070"
+                android:textSize="18sp"
+                android:textStyle="normal"
+                android:typeface="normal" />
+
+        <TextView
+                android:id="@+id/textViewDestinationName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/textViewLineNumber"
+                android:layout_alignBottom="@+id/textViewLineNumber"
+                android:layout_toRightOf="@+id/textViewLineNumber"
+                android:textColor="#707070"
+                android:textSize="18sp"
+                android:textStyle="normal"
+                android:typeface="normal" />
+
+        <TextView
+                android:id="@+id/textViewDepartureTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/textViewDestinationName"
+                android:layout_alignBottom="@+id/textViewDestinationName"
+                android:layout_toRightOf="@+id/textViewDestinationName"
+                android:textColor="#FC6868"
+                android:textSize="18sp"
+                android:textStyle="normal"
+                android:typeface="normal" />
+
+        <TextView
+                android:id="@+id/textViewDepartureTimeScroller"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/textViewLineNumber"
+                android:layout_below="@+id/textViewLineNumber"
+                android:layout_marginTop="5dp"
+                android:textColor="#FC6868"
+                android:textSize="12sp"
+                android:textStyle="normal"
+                android:typeface="normal" />
+    </RelativeLayout>
 
 </RelativeLayout>
