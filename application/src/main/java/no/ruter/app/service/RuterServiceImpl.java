@@ -2,7 +2,6 @@ package no.ruter.app.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import no.ruter.app.domain.Platform;
 import no.ruter.app.domain.RealTimeData;
@@ -59,15 +58,21 @@ public class RuterServiceImpl implements RuterService {
 		return realTimeRepository.getRealTimeData(id);
 	}
 
-	public Map<Platform, List<RealTimeData>> getRealTimeDataByPlatform(
-			Integer id) throws RepositoryException {
-		
-		List<RealTimeData> realTimeDepartures = realTimeRepository.getRealTimeData(id);
-		
-		// TODO Kristian: Implement
-		return null;
+	/**
+	 * {@inheritDoc}
+	 */
+	public List<Platform> getRealTimeDataByPlatform(Integer id)
+			throws RepositoryException {
+
+		List<RealTimeData> realTimeDepartures = realTimeRepository
+				.getRealTimeData(id);
+
+		return sortRealTimeDataOnPlatform(realTimeDepartures);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public String printLocationData(Context context) {
 
 		Location location = locationRepository.getCurrentLocation(context);
@@ -76,8 +81,33 @@ public class RuterServiceImpl implements RuterService {
 		sb.append("Accuracy: " + location.getAccuracy() + " | ");
 		sb.append("Lat: " + location.getLatitude() + " | ");
 		sb.append("Long: " + location.getLongitude());
-		
+
 		return sb.toString();
+	}
+
+	private List<Platform> sortRealTimeDataOnPlatform(List<RealTimeData> data) {
+
+		List<Platform> platforms = new ArrayList<Platform>();
+
+		// Iterate all the data and put them in platforms
+		for (RealTimeData realTimeData : data) {
+
+			Platform platform = new Platform(realTimeData.getPlatformName());
+			if (platforms.contains(platform)) {
+
+				// The platform exists, add this RealTimeData
+				platforms.get(platforms.indexOf(platform)).getDepartures()
+						.add(realTimeData);
+			} else {
+
+				// First entry for this platform, add data and platform
+				platform.getDepartures().add(realTimeData);
+				platforms.add(platform);
+			}
+
+		}
+
+		return platforms;
 	}
 
 }
