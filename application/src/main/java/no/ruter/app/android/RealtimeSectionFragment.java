@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
+import no.ruter.app.domain.Platform;
 import no.ruter.app.domain.RealTimeData;
 import no.ruter.app.domain.RealTimeLocation;
 import no.ruter.app.exception.RepositoryException;
@@ -19,8 +20,9 @@ import no.ruter.app.service.ServiceFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public class RealtimeSectionFragment extends Fragment {
+public class RealTimeSectionFragment extends Fragment {
 
     private View rootView;
 
@@ -34,13 +36,13 @@ public class RealtimeSectionFragment extends Fragment {
     private ArrayAdapter<RealTimeLocation> realTimeAutoCompleteAdapter;
 
     private ArrayAdapter<RealTimeLocation> selectStationAdapter;
-    private ArrayAdapter<RealTimeData> realTimeListViewAdapter;
+    private RealTimeDataAdapter realTimeDataAdapter;
     private AutoCompleteTextView realtimeAutoComplete;
 
     private ListView realTimeResultsListView;
     private ListView selectStationListView;
 
-    private List<RealTimeData> realTimeData;
+    private List<Platform> realTimeData;
     private List<RealTimeLocation> realTimeLocations;
     // Need separate list because another adapter uses it
     private List<RealTimeLocation> selectRealTimeLocations;
@@ -69,40 +71,40 @@ public class RealtimeSectionFragment extends Fragment {
     private void setUpViews() {
         setUpResultListView();
         setUpAutoCompleteTextView();
-        setUpSelectStationListView();
+//        setUpSelectStationListView();
     }
 
-    private void setUpSelectStationListView() {
-        selectStationListView = (ListView) rootView.findViewById(R.id.selectStationListView);
-
-        selectRealTimeLocations = new ArrayList<RealTimeLocation>();
-
-        selectStationAdapter = new ArrayAdapter<RealTimeLocation>(getActivity(), R.layout.listview_realtime_data, R.id.text1, selectRealTimeLocations);
-        selectStationAdapter.setNotifyOnChange(true);
-        selectStationListView.setAdapter(selectStationAdapter);
-
-        selectStationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long l) {
-                selectedLocation = (RealTimeLocation) parent.getItemAtPosition(position);
-                selectRealTimeLocations.clear();
-                realTimeData = getRealTimeData(selectedLocation.getId());
-
-                // TODO: Should not have to do this. Da fuk?
-                realTimeListViewAdapter = new ArrayAdapter<RealTimeData>(getActivity(), R.layout.listview_realtime_data, R.id.text1, realTimeData);
-                realTimeResultsListView.setAdapter(realTimeListViewAdapter);
-            }
-        });
-    }
+//    private void setUpSelectStationListView() {
+//        selectStationListView = (ListView) rootView.findViewById(R.id.selectStationListView);
+//
+//        selectRealTimeLocations = new ArrayList<RealTimeLocation>();
+//
+//        selectStationAdapter = new ArrayAdapter<RealTimeLocation>(getActivity(), android.R.layout.simple_list_item_1, selectRealTimeLocations);
+//        selectStationAdapter.setNotifyOnChange(true);
+//        selectStationListView.setAdapter(selectStationAdapter);
+//
+//        selectStationListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long l) {
+//                selectedLocation = (RealTimeLocation) parent.getItemAtPosition(position);
+//                selectRealTimeLocations.clear();
+//                realTimeData = getRealTimeData(selectedLocation.getId());
+//
+//                // TODO: Should not have to do this. Da fuk?
+//                realTimeListViewAdapter = new ArrayAdapter<RealTimeData>(getActivity(), android.R.layout.simple_list_item_1, realTimeData);
+//                realTimeResultsListView.setAdapter(realTimeListViewAdapter);
+//            }
+//        });
+//    }
 
     private void setUpResultListView() {
         // TODO: Maybe this should be an ExpandableListView?
         realTimeResultsListView = (ListView) rootView.findViewById(R.id.listView1);
 
-        realTimeData = new ArrayList<RealTimeData>();
+        realTimeData = null;
 
-        realTimeListViewAdapter = new ArrayAdapter<RealTimeData>(getActivity(), R.layout.listview_realtime_data, R.id.text1, realTimeData);
-        realTimeListViewAdapter.setNotifyOnChange(true);
-        realTimeResultsListView.setAdapter(realTimeListViewAdapter);
+        realTimeDataAdapter = new RealTimeDataAdapter(getView().getContext(), R.layout.listview_realtime_data, realTimeData);
+        realTimeDataAdapter.setNotifyOnChange(true);
+        realTimeResultsListView.setAdapter(realTimeDataAdapter);
     }
 
     private void setUpAutoCompleteTextView() {
@@ -119,7 +121,7 @@ public class RealtimeSectionFragment extends Fragment {
                         // TODO: progressBar not working
                         progressBar.setVisibility(ProgressBar.VISIBLE);
                         selectRealTimeLocations.clear();
-                        realTimeData = getRealTimeData(selectedLocation.getId());
+                        realTimeData = getRealTimeDataByPlatform(selectedLocation.getId());
                         progressBar.setVisibility(ProgressBar.GONE);
                     }
                     else {
@@ -136,7 +138,7 @@ public class RealtimeSectionFragment extends Fragment {
                         else if(realTimeLocations.size() == 1) {
                             selectRealTimeLocations.clear();
                             realTimeData.clear();
-                            realTimeData.addAll(getRealTimeData(realTimeLocations.get(0).getId()));
+                            realTimeData.addAll(getRealTimeDataByPlatform(realTimeLocations.get(0).getId()));
                         }
                         else {
                             realTimeData.clear();
@@ -145,9 +147,6 @@ public class RealtimeSectionFragment extends Fragment {
                     }
 //                    realTimeListViewAdapter.clear();
 //                    realTimeListViewAdapter.addAll(realTimeData);
-                    for (RealTimeData data : realTimeData) {
-                        System.out.println(data.getDestination());
-                    }
 
                     handled = true;
                 }
@@ -173,7 +172,7 @@ public class RealtimeSectionFragment extends Fragment {
                 }
 
                 realTimeAutoCompleteAdapter.clear();
-                realTimeListViewAdapter.clear();
+                realTimeDataAdapter.clear();
 
                 // Hide the keyboard on select
                 InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(getView().getContext().INPUT_METHOD_SERVICE);
@@ -252,7 +251,7 @@ public class RealtimeSectionFragment extends Fragment {
         protected String doInBackground(String... id) {
             realTimeData.clear();
             try {
-                realTimeData.addAll(ServiceFactory.getRuterService().getRealTimeData(Integer.parseInt(id[0])));
+                realTimeData.addAll(ServiceFactory.getRuterService().getRealTimeDataByPlatform(Integer.parseInt(id[0])));
             } catch (RepositoryException e) {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
@@ -273,11 +272,9 @@ public class RealtimeSectionFragment extends Fragment {
         }
     }
 
-    private List<RealTimeData> getRealTimeData(Integer id) {
-        List<RealTimeData> realTimeData = new ArrayList<RealTimeData>();
-
+    private List<Platform> getRealTimeDataByPlatform(Integer id) {
         try {
-            realTimeData = ServiceFactory.getRuterService().getRealTimeData(id);
+            realTimeData = ServiceFactory.getRuterService().getRealTimeDataByPlatform(id);
         } catch (RepositoryException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }

@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Window;
 
 
 public class MainViewActivity extends FragmentActivity implements ActionBar.TabListener {
@@ -72,7 +71,7 @@ public class MainViewActivity extends FragmentActivity implements ActionBar.TabL
         public Fragment getItem(int i) {
             switch (i) {
                 case 0:
-                    return new RealtimeSectionFragment();
+                    return new RealTimeSectionFragment();
                 case 2:
                     return new RoutePlannerSectionFragment();
                 default:
