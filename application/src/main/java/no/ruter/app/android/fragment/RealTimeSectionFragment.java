@@ -1,4 +1,4 @@
-package no.ruter.app.android;
+package no.ruter.app.android.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,15 +12,15 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
+import no.ruter.app.android.R;
+import no.ruter.app.android.adapter.RealTimeDataAdapter;
 import no.ruter.app.domain.Platform;
-import no.ruter.app.domain.RealTimeData;
 import no.ruter.app.domain.RealTimeLocation;
 import no.ruter.app.exception.RepositoryException;
 import no.ruter.app.service.ServiceFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class RealTimeSectionFragment extends Fragment {
 

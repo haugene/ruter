@@ -1,5 +1,6 @@
-package no.ruter.app.android;
+package no.ruter.app.android.fragment;
 
+import no.ruter.app.android.R;
 import no.ruter.app.service.ServiceFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
