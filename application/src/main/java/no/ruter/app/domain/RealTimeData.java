@@ -18,7 +18,6 @@ public class RealTimeData {
 	 * 
 	 * @param line
 	 * @param destination
-	 * @param aimedArrivalTime
 	 * @param expectedArrivalTime
 	 * @param timestamp
 	 * @param vehicleType
@@ -41,6 +40,8 @@ public class RealTimeData {
 	 */
 	private String line;
 	private String destination;
+	
+	// TODO: Refactor to departureTime
 	private DateTime expectedArrivalTime;
 	private DateTime timestamp;
 	private String platformName;
