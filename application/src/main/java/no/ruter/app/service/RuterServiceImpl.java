@@ -60,7 +60,10 @@ public class RuterServiceImpl implements RuterService {
 	}
 
 	public Map<Platform, List<RealTimeData>> getRealTimeDataByPlatform(
-			Integer id) {
+			Integer id) throws RepositoryException {
+		
+		List<RealTimeData> realTimeDepartures = realTimeRepository.getRealTimeData(id);
+		
 		// TODO Kristian: Implement
 		return null;
 	}

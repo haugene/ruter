@@ -62,8 +62,9 @@ public interface RuterService {
 	 * 
 	 * @param id for the wanted {@link RealTimeLocation}
 	 * @return map of all departures, each platform has a list of departures
+	 * @throws RepositoryException
 	 */
-	public Map<Platform, List<RealTimeData>> getRealTimeDataByPlatform(Integer id);
+	public Map<Platform, List<RealTimeData>> getRealTimeDataByPlatform(Integer id) throws RepositoryException;
 
 	/**
 	 * Does some magic and returns a string that has information about the
