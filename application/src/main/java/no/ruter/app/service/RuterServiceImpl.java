@@ -106,8 +106,9 @@ public class RuterServiceImpl implements RuterService {
 			}
 
 		}
+		
+		// TODO: SORT PLATFORMS by name
 
 		return platforms;
 	}
-
 }
