@@ -100,9 +100,9 @@ public class RealTimeSectionFragment extends Fragment {
         // TODO: Maybe this should be an ExpandableListView?
         realTimeResultsListView = (ListView) rootView.findViewById(R.id.listView1);
 
-        realTimeData = null;
+        realTimeData = new ArrayList<Platform>();
 
-        realTimeDataAdapter = new RealTimeDataAdapter(getView().getContext(), R.layout.listview_realtime_data, realTimeData);
+        realTimeDataAdapter = new RealTimeDataAdapter(getActivity(), R.layout.listview_realtime_data, realTimeData);
         realTimeDataAdapter.setNotifyOnChange(true);
         realTimeResultsListView.setAdapter(realTimeDataAdapter);
     }

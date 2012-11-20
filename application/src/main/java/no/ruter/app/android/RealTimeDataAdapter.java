@@ -16,21 +16,19 @@ import java.util.Map;
 
 public class RealTimeDataAdapter extends ArrayAdapter {
 
-    private LayoutInflater inflater;
-    private Map<Platform, List<RealTimeData>> realTimeDataMap;
     private List<Platform> platformList;
     private Context context;
     int layoutResourceId;
 
     public RealTimeDataAdapter(Context context, int textViewResourceId, List objects) {
         super(context, textViewResourceId, objects);
-        this.layoutResourceId = layoutResourceId;
+        this.layoutResourceId = textViewResourceId;
         platformList = objects;
         this.context = context;
     }
 
     public int getCount() {
-        return realTimeDataMap.size();
+        return platformList.size();
     }
 
     public Object getItem(int i) {
