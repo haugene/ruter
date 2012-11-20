@@ -9,6 +9,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import no.ruter.app.android.fragment.ClosestStopFragment;
+import no.ruter.app.android.fragment.RealTimeSectionFragment;
+import no.ruter.app.android.fragment.RoutePlannerSectionFragment;
 
 
 public class MainViewActivity extends FragmentActivity implements ActionBar.TabListener {

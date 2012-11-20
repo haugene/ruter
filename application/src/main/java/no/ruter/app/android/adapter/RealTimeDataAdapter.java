@@ -1,4 +1,4 @@
-package no.ruter.app.android;
+package no.ruter.app.android.adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import no.ruter.app.android.R;
 import no.ruter.app.domain.Platform;
 import no.ruter.app.domain.RealTimeData;
 

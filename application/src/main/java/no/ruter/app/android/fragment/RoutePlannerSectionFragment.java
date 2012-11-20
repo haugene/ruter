@@ -1,4 +1,4 @@
-package no.ruter.app.android;
+package no.ruter.app.android.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import no.ruter.app.android.R;
 import no.ruter.app.domain.RealTimeLocation;
 import no.ruter.app.service.ServiceFactory;
 
