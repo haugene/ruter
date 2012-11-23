@@ -41,7 +41,6 @@ public class RealTimeData {
 	private String line;
 	private String destination;
 	
-	// TODO: Refactor to departureTime
 	private DateTime expectedDepartureTime;
 	private DateTime timestamp;
 	private String platformName;
