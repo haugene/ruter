@@ -3,6 +3,7 @@ package no.ruter.app.repository;
 import java.util.List;
 
 import no.ruter.app.domain.RealTimeLocation;
+import no.ruter.app.exception.RepositoryException;
 import android.location.Location;
 
 /**
@@ -19,7 +20,8 @@ public interface PlaceRepository {
 	 * @param location
 	 *            current location of user
 	 * @return close stops
+	 * @throws RepositoryException 
 	 */
-	public List<RealTimeLocation> getLocationsNearMe(Location location);
+	public List<RealTimeLocation> getLocationsNearMe(Location location) throws RepositoryException;
 
 }

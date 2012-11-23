@@ -31,6 +31,7 @@ public class JSONUtil {
 	public final static String WEB_SERVICE_HOST_URL = "http://api-test.trafikanten.no/";
 	public final static String FIND_MATCHES = "RealTime/FindMatches/";
 	public final static String GET_DATA = "RealTime/GetRealTimeData/";
+	public final static String PLACE_NEAR_ME = "Place/GetClosestStopsByCoordinates/";
 	
 	/**
 	 * Method for running a JSON service from Ruter api.
