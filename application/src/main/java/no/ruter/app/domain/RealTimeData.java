@@ -18,18 +18,18 @@ public class RealTimeData {
 	 * 
 	 * @param line
 	 * @param destination
-	 * @param expectedArrivalTime
+	 * @param expectedDepartureTime
 	 * @param timestamp
 	 * @param vehicleType
 	 * @param platformName
 	 */
 	public RealTimeData(String line, String destination,
-			DateTime expectedArrivalTime, DateTime timestamp,
+			DateTime expectedDepartureTime, DateTime timestamp,
 			String platformName, VehicleType vehicleType) {
 		super();
 		this.line = line;
 		this.destination = destination;
-		this.expectedArrivalTime = expectedArrivalTime;
+		this.expectedDepartureTime = expectedDepartureTime;
 		this.timestamp = timestamp;
 		this.platformName = platformName;
 		this.vehicleType = vehicleType;
@@ -42,7 +42,7 @@ public class RealTimeData {
 	private String destination;
 	
 	// TODO: Refactor to departureTime
-	private DateTime expectedArrivalTime;
+	private DateTime expectedDepartureTime;
 	private DateTime timestamp;
 	private String platformName;
 	private VehicleType vehicleType;
@@ -52,25 +52,25 @@ public class RealTimeData {
 	 */
 
 	/**
-	 * Calculates the time between now and expected arrival time. Returns
+	 * Calculates the time between now and expected departure time. Returns
 	 * formatted time on the form "nå, 5 min or 15:45"
 	 * 
-	 * @return formatted arrival info
+	 * @return formatted departure info
 	 */
-	public String getFormattedArrivalTime() {
+	public String getFormattedDepartureTime() {
 
-		if (expectedArrivalTime.isBefore(DateTime.now().plusSeconds(45))) {
+		if (expectedDepartureTime.isBefore(DateTime.now().plusSeconds(45))) {
 			return "nå";
 		}
 
-		if (expectedArrivalTime.isBefore(DateTime.now().plusMinutes(9).plusSeconds(59))) {
+		if (expectedDepartureTime.isBefore(DateTime.now().plusMinutes(9).plusSeconds(59))) {
 			Integer minutes = Minutes.minutesBetween(DateTime.now(),
-					expectedArrivalTime).getMinutes();
+					expectedDepartureTime).getMinutes();
 			return minutes.toString() + " min";
 		}
 
-		return String.valueOf(expectedArrivalTime.getHourOfDay()) + ":"
-				+ String.valueOf(expectedArrivalTime.getMinuteOfHour());
+		return String.valueOf(expectedDepartureTime.getHourOfDay()) + ":"
+				+ String.valueOf(expectedDepartureTime.getMinuteOfHour());
 	}
 
 	/*
@@ -84,8 +84,8 @@ public class RealTimeData {
 		return destination;
 	}
 
-	public DateTime getExpectedArrivalTime() {
-		return expectedArrivalTime;
+	public DateTime getExpectedDepartureTime() {
+		return expectedDepartureTime;
 	}
 
 	public DateTime getTimestamp() {

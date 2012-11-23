@@ -128,12 +128,12 @@ public class RealTimeRepositoryImpl implements RealTimeRepository{
 
 		String line = data.getString("PublishedLineName");
 		String destination = data.getString("DestinationName");
-		DateTime expectedArrivalTime = parseDate(data.getString("ExpectedArrivalTime"));
+		DateTime expectedDepartureTime = parseDate(data.getString("ExpectedDepartureTime"));
 		DateTime timestamp = parseDate(data.getString("RecordedAtTime"));
 		String platformName = data.getString("DeparturePlatformName");
 		VehicleType vehicleType = VehicleType.valueOf(data.getString("VehicleMode").toUpperCase());
 
-		return new RealTimeData(line, destination, expectedArrivalTime,
+		return new RealTimeData(line, destination, expectedDepartureTime,
 				timestamp, platformName, vehicleType);
 
 	}

@@ -12,7 +12,7 @@ public class RealTimeDataBuilder {
 	 */
 	private String line = "17";
 	private String destination = "Grefsen";
-	private DateTime expectedArrivalTime = DateTime.now().plusMinutes(2);
+	private DateTime expectedDepartureTime = DateTime.now().plusMinutes(2);
 	private DateTime timestamp = DateTime.now().minusMinutes(2);
 	private String platformName = "1";
 	private VehicleType vehicleType = VehicleType.TRAM;
@@ -30,8 +30,8 @@ public class RealTimeDataBuilder {
 		return this;
 	}
 
-	public RealTimeDataBuilder withExpectedArrivalTime(DateTime arrivalTime) {
-		this.expectedArrivalTime = arrivalTime;
+	public RealTimeDataBuilder withExpectedDepartureTime(DateTime departureTime) {
+		this.expectedDepartureTime = departureTime;
 		return this;
 	}
 
@@ -52,7 +52,7 @@ public class RealTimeDataBuilder {
 
 	// Build the RealTimeData object based on our values
 	public RealTimeData build() {
-		return new RealTimeData(line, destination, expectedArrivalTime,
+		return new RealTimeData(line, destination, expectedDepartureTime,
 				timestamp, platformName, vehicleType);
 	}
 

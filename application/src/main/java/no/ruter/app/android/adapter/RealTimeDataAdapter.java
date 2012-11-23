@@ -57,7 +57,7 @@ public class RealTimeDataAdapter extends ArrayAdapter {
         platformName.setText(platformList.get(position).getName());
         lineNumber.setText(platformList.get(position).getDepartures().get(position).getLine());
         lineName.setText(platformList.get(position).getDepartures().get(position).getDestination());
-        currentDeparture.setText(platformList.get(position).getDepartures().get(position).getFormattedArrivalTime());
+        currentDeparture.setText(platformList.get(position).getDepartures().get(position).getFormattedDepartureTime());
 
         return realtimeDataView;
     }

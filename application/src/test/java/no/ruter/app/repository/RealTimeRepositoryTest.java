@@ -53,12 +53,12 @@ public class RealTimeRepositoryTest {
 	}
 
 	@Test
-	public void realTimeDataShouldContainExpectedArrivalTimeAndTimeStamp() throws RepositoryException {
+	public void realTimeDataShouldContainExpectedDepartureTimeAndTimeStamp() throws RepositoryException {
 
 		// Query for welhavensgate
 		List<RealTimeData> realTimeData = repo.getRealTimeData(3010211);
-		assertTrue("Expected arrival time was null", realTimeData.get(0)
-				.getExpectedArrivalTime() != null);
+		assertTrue("Expected departure time was null", realTimeData.get(0)
+				.getExpectedDepartureTime() != null);
 		assertTrue("We did not get any real time data", realTimeData.size() > 0);
 
 		/*
@@ -68,9 +68,9 @@ public class RealTimeRepositoryTest {
 		 */
 		for (RealTimeData realTime : realTimeData) {
 			assertTrue(
-					"RealTimeData did not have expected arrival between now and 1 hr",
-					realTime.getExpectedArrivalTime().isAfterNow()
-							&& realTime.getExpectedArrivalTime().isBefore(
+					"RealTimeData did not have expected departure between now and 1 hr",
+					realTime.getExpectedDepartureTime().isAfterNow()
+							&& realTime.getExpectedDepartureTime().isBefore(
 									DateTime.now().plusHours(2)));
 			assertTrue(
 					"RealTimeData did have a timestamp newer than 1 hr and older than now",
