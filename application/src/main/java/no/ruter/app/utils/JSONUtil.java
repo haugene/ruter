@@ -159,8 +159,9 @@ public class JSONUtil {
 
 		String name = location.getString("Name");
 		Integer id = location.getInt("ID");
+		String district = location.getString("District");
 
-		return new RealTimeLocation(name, id);
+		return new RealTimeLocation(name, id, district);
 	}
 
 	/**

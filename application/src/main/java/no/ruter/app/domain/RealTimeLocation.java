@@ -13,11 +13,13 @@ public class RealTimeLocation {
 	 * 
 	 * @param name
 	 * @param id
+	 * @param district
 	 */
-	public RealTimeLocation(String name, Integer id) {
+	public RealTimeLocation(String name, Integer id, String district) {
 		super();
 		this.name = name;
 		this.id = id;
+		this.district = district;
 	}
 
 	/*
@@ -25,6 +27,7 @@ public class RealTimeLocation {
 	 */
 	private String name;
 	private Integer id;
+	private String district;
 
 	/*
 	 * Getters and setters
@@ -35,6 +38,10 @@ public class RealTimeLocation {
 
 	public Integer getId() {
 		return id;
+	}
+	
+	public String getDistrict() {
+		return district;
 	}
 
 	@Override

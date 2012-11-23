@@ -9,6 +9,7 @@ import no.ruter.app.domain.RealTimeData;
 import no.ruter.app.domain.RealTimeLocation;
 import no.ruter.app.exception.RepositoryException;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,6 +42,21 @@ public class RealTimeRepositoryTest {
 				.get(0).getName());
 		assertTrue("Did not contain expected element", containsElement);
 
+	}
+	
+	@Test
+	public void locationsShouldContainNameAndDistrictAndID() throws RepositoryException {
+		
+		List<RealTimeLocation> locations = repo.findLocations("national");
+		
+		assertTrue("Did not get any locations", locations.size() > 0);
+		
+		// Check all of them
+		for(RealTimeLocation location : locations){
+			assertTrue("Location did not have a name", StringUtils.isNotBlank(location.getName()));
+			assertTrue("Location did not have ID", location.getId() > 0);
+			assertTrue("Location did not have District", StringUtils.isNotBlank(location.getDistrict()));
+		}
 	}
 
 	@Test
