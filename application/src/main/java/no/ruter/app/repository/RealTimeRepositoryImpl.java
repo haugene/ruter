@@ -214,10 +214,8 @@ public class RealTimeRepositoryImpl implements RealTimeRepository{
 
 		String name = location.getString("Name");
 		Integer id = location.getInt("ID");
-		Integer xcoord = location.getInt("X");
-		Integer ycoord = location.getInt("Y");
 
-		return new RealTimeLocation(name, id, xcoord, ycoord);
+		return new RealTimeLocation(name, id);
 	}
 
 	/**

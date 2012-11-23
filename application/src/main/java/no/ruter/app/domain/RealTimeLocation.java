@@ -13,16 +13,11 @@ public class RealTimeLocation {
 	 * 
 	 * @param name
 	 * @param id
-	 * @param xcoord
-	 * @param ycoord
 	 */
-	public RealTimeLocation(String name, Integer id, Integer xcoord,
-			Integer ycoord) {
+	public RealTimeLocation(String name, Integer id) {
 		super();
 		this.name = name;
 		this.id = id;
-		this.xcoord = xcoord;
-		this.ycoord = ycoord;
 	}
 
 	/*
@@ -30,8 +25,6 @@ public class RealTimeLocation {
 	 */
 	private String name;
 	private Integer id;
-	private Integer xcoord;
-	private Integer ycoord;
 
 	/*
 	 * Getters and setters
@@ -44,15 +37,7 @@ public class RealTimeLocation {
 		return id;
 	}
 
-	public Integer getXcoord() {
-		return xcoord;
-	}
-
-	public Integer getYcoord() {
-		return ycoord;
-	}
-
-    @Override
+	@Override
     public String toString() {
         return name;
     }
