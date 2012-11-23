@@ -9,7 +9,6 @@
 	<name>RuterApp - Parent</name>
 	<modules>
 		<module>application</module>
-		<module>application-it</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
