@@ -9,7 +9,7 @@ import java.util.List;
  * @author Kristian
  * 
  */
-public class Platform {
+public class Platform implements Comparable<Platform>{
 
 	/*
 	 * Member variables
@@ -66,5 +66,12 @@ public class Platform {
 		} else if (!name.equals(other.name))
 			return false;
 		return true;
+	}
+
+	/**
+	 * When we compare platforms, sort them alphabetically on name
+	 */
+	public int compareTo(Platform o) {
+		return this.name.compareTo(o.name);
 	}
 }

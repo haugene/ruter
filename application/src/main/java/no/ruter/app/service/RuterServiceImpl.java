@@ -1,6 +1,7 @@
 package no.ruter.app.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import no.ruter.app.domain.Platform;
@@ -107,8 +108,8 @@ public class RuterServiceImpl implements RuterService {
 
 		}
 		
-		// TODO: SORT PLATFORMS by name
-
+		// Sort the list of platforms and return it
+		Collections.sort(platforms);
 		return platforms;
 	}
 }
