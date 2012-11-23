@@ -97,10 +97,16 @@ public class LocationRepositoryImpl implements
 	 */
 	private void createAndRegisterLocationListener(Context context) {
 		
-		// TODO: Check that a network_provider exists! Crashes in emulator
-
 		// Acquire a reference to the system Location Manager
 		locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+		
+		// Check that the network provider is enabled
+		boolean isNetworkProviderEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+		if(!isNetworkProviderEnabled){
+			// TODO: This will probably not fix the emulator problems.
+			// I'm guessing NULLPOINTERS!
+			return;
+		}
 		
 		// Create listener
 		locationListener = createLocationListener();
