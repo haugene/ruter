@@ -3,17 +3,12 @@ package no.ruter.app.repository;
 import static no.ruter.app.utils.JSONUtil.PLACE_NEAR_ME;
 import static no.ruter.app.utils.JSONUtil.WEB_SERVICE_HOST_URL;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.commons.codec.EncoderException;
-import org.apache.commons.codec.net.URLCodec;
-
-import us.monoid.json.JSONObject;
 
 import no.ruter.app.domain.RealTimeLocation;
 import no.ruter.app.exception.RepositoryException;
 import no.ruter.app.utils.JSONUtil;
+import us.monoid.json.JSONObject;
 import android.location.Location;
 
 /**
