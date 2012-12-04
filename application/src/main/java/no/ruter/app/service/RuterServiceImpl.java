@@ -76,14 +76,23 @@ public class RuterServiceImpl implements RuterService {
 	 */
 	public String printLocationData(Context context) {
 
-		Location location = locationRepository.getCurrentLocation(context);
-
-		StringBuilder sb = new StringBuilder();
-		sb.append("Accuracy: " + location.getAccuracy() + " | ");
-		sb.append("Lat: " + location.getLatitude() + " | ");
-		sb.append("Long: " + location.getLongitude());
-
-		return sb.toString();
+		Location location;
+		try {
+			location = locationRepository.getCurrentLocation(context);
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("Accuracy: " + location.getAccuracy() + " | ");
+			sb.append("Lat: " + location.getLatitude() + " | ");
+			sb.append("Long: " + location.getLongitude());
+			
+			return sb.toString();
+		} catch (RepositoryException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return "";
+		
 	}
 
 	private List<Platform> sortRealTimeDataOnPlatform(List<RealTimeData> data) {

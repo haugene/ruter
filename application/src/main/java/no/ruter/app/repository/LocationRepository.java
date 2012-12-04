@@ -1,5 +1,6 @@
 package no.ruter.app.repository;
 
+import no.ruter.app.exception.RepositoryException;
 import android.content.Context;
 import android.location.Location;
 
@@ -18,7 +19,8 @@ public interface LocationRepository {
 	 *            context to use for looking up system services
 	 * 
 	 * @return {@link Location} best location
+	 * @throws RepositoryException 
 	 */
-	public Location getCurrentLocation(Context context);
+	public Location getCurrentLocation(Context context) throws RepositoryException;
 
 }

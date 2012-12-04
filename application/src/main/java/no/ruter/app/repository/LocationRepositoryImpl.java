@@ -1,5 +1,6 @@
 package no.ruter.app.repository;
 
+import no.ruter.app.exception.RepositoryException;
 import no.ruter.app.utils.LocationUtil;
 
 import org.joda.time.DateTime;
@@ -47,8 +48,9 @@ public class LocationRepositoryImpl implements
 
 	/**
 	 * {@inheritDoc}
+	 * @throws RepositoryException 
 	 */
-	public Location getCurrentLocation(Context context) {
+	public Location getCurrentLocation(Context context) throws RepositoryException {
 		// Update timestamp for last repo request, this is it!
 		lastRequest = DateTime.now();
 
@@ -94,8 +96,9 @@ public class LocationRepositoryImpl implements
 	/**
 	 * Creates a {@link LocationListener} and register it with
 	 * {@link LocationManager} Also, read the cached last location in android
+	 * @throws RepositoryException 
 	 */
-	private void createAndRegisterLocationListener(Context context) {
+	private void createAndRegisterLocationListener(Context context) throws RepositoryException {
 		
 		// Acquire a reference to the system Location Manager
 		locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
@@ -103,9 +106,7 @@ public class LocationRepositoryImpl implements
 		// Check that the network provider is enabled
 		boolean isNetworkProviderEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 		if(!isNetworkProviderEnabled){
-			// TODO: This will probably not fix the emulator problems.
-			// I'm guessing NULLPOINTERS!
-			return;
+			throw new RepositoryException("Location manager is not enabled");
 		}
 		
 		// Create listener
