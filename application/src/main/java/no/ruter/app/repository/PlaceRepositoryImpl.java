@@ -56,7 +56,7 @@ public class PlaceRepositoryImpl implements PlaceRepository {
 		try {
 
 			JSONObject response = jsonUtil.runService(service,
-					"?coordinates=(X=" + x + ",Y=" + y + ")&proposals=7");
+					"?coordinates=(X=" + x + ",Y=" + y + ")&proposals=15");
 			locations = jsonUtil.parseRealTimeLocationsFromResponse(response);
 
 		} catch (Exception e) {

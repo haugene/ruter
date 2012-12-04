@@ -120,7 +120,7 @@ public class JSONUtil {
 			
 			// Ruter returns some locations with name "null"
 			if("null".equals(realTimeLocation.getName())){
-				break;
+				continue;
 			}
 			
 			realTimeLocations.add(realTimeLocation);
