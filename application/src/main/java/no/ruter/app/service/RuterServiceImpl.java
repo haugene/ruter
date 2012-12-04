@@ -81,17 +81,18 @@ public class RuterServiceImpl implements RuterService {
 			location = locationRepository.getCurrentLocation(context);
 			
 			StringBuilder sb = new StringBuilder();
+
+			if(location == null){
+				return "Got null location";
+			}
 			sb.append("Accuracy: " + location.getAccuracy() + " | ");
 			sb.append("Lat: " + location.getLatitude() + " | ");
 			sb.append("Long: " + location.getLongitude());
 			
 			return sb.toString();
 		} catch (RepositoryException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return "Caught exception";
 		}
-		
-		return "";
 		
 	}
 
