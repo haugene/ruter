@@ -2,6 +2,10 @@ package no.ruter.app.android.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +18,17 @@ import no.ruter.app.domain.RealTimeData;
 
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RealTimeDataAdapter extends ArrayAdapter {
 
     private List<Platform> platformList;
     private Context context;
     int layoutResourceId;
+    String regex = "(\\d{2}[\\:]\\d{2})|(\\s{1}nå\\s{3})|(\\s{1}\\d{1}\\s{1}min)";
+    Matcher matcher;
+    Pattern pattern;
 
     public RealTimeDataAdapter(Context context, int textViewResourceId, List objects) {
         super(context, textViewResourceId, objects);
@@ -42,22 +51,44 @@ public class RealTimeDataAdapter extends ArrayAdapter {
 
     public View getView(int position, View view, ViewGroup parent) {
         View realtimeDataView = view;
-        if(view == null) {
+        if (realtimeDataView == null) {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
             inflater.inflate(layoutResourceId, parent, false);
             realtimeDataView = inflater.inflate(R.layout.listview_realtime_data, null);
         }
 
-        TextView platformName = (TextView) view.findViewById(R.id.textViewPlatformName);
-        TextView lineNumber = (TextView) view.findViewById(R.id.textViewLineNumber);
-        TextView lineName = (TextView) view.findViewById(R.id.textViewDestinationName);
-        TextView currentDeparture = (TextView) view.findViewById(R.id.textViewDepartureTime);
-        TextView nextDepartures = (TextView) view.findViewById(R.id.textViewDepartureTimeScroller);
+        TextView platformName = (TextView) realtimeDataView.findViewById(R.id.textViewPlatformName);
+        TextView lineNumber = (TextView) realtimeDataView.findViewById(R.id.textViewLineNumber);
+        TextView lineName = (TextView) realtimeDataView.findViewById(R.id.textViewDestinationName);
+        TextView currentDeparture = (TextView) realtimeDataView.findViewById(R.id.textViewDepartureTime);
+        TextView nextDepartures = (TextView) realtimeDataView.findViewById(R.id.textViewDepartureTimeScroller);
 
-        platformName.setText(platformList.get(position).getName());
-        lineNumber.setText(platformList.get(position).getDepartures().get(position).getLine());
-        lineName.setText(platformList.get(position).getDepartures().get(position).getDestination());
-        currentDeparture.setText(platformList.get(position).getDepartures().get(position).getFormattedDepartureTime());
+        Platform currentPlatform = platformList.get(position);
+        List<RealTimeData> departures = currentPlatform.getDepartures();
+
+        platformName.setText("Platform " + currentPlatform.getName()); // TODO: String resource
+        lineNumber.setText(departures.get(position).getLine() + " "); // TODO: XMLify
+        lineName.setText(departures.get(position).getDestination() + " ");
+        currentDeparture.setText(departures.get(position).getFormattedDepartureTime());
+
+        SpannableStringBuilder destinationSpannableStringBuilder = new SpannableStringBuilder();
+        String departuresString = "";
+
+        for (int i = 0; i < departures.size() && i < 5; i++) {
+            departuresString = departuresString.concat(departures.get(i).getLine() + " " +
+                    departures.get(i).getDestination() + " " + departures.get(i).getFormattedDepartureTime() + "   ");
+        }
+        pattern = Pattern.compile(regex);
+        matcher = pattern.matcher(departuresString);
+
+        destinationSpannableStringBuilder.append(departuresString);
+
+        while (matcher.find()) {
+            destinationSpannableStringBuilder.setSpan(new ForegroundColorSpan(Color.parseColor("#FC6868")), matcher.start(), matcher.end(), 0);
+            System.out.println(matcher.group() + matcher.start() + matcher.end());
+        }
+
+        nextDepartures.setText(destinationSpannableStringBuilder);
 
         return realtimeDataView;
     }

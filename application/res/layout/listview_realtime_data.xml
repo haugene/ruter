@@ -88,7 +88,7 @@
                 android:layout_alignLeft="@+id/textViewLineNumber"
                 android:layout_below="@+id/textViewLineNumber"
                 android:layout_marginTop="5dp"
-                android:textColor="#FC6868"
+                android:textColor="#707070"
                 android:textSize="12sp"
                 android:textStyle="normal"
                 android:typeface="normal" />
