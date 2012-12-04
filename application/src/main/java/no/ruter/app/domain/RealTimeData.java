@@ -40,7 +40,7 @@ public class RealTimeData {
 	 */
 	private String line;
 	private String destination;
-	
+
 	private DateTime expectedDepartureTime;
 	private DateTime timestamp;
 	private String platformName;
@@ -62,14 +62,15 @@ public class RealTimeData {
 			return "nå";
 		}
 
-		if (expectedDepartureTime.isBefore(DateTime.now().plusMinutes(9).plusSeconds(59))) {
+		if (expectedDepartureTime.isBefore(DateTime.now().plusMinutes(9)
+				.plusSeconds(59))) {
 			Integer minutes = Minutes.minutesBetween(DateTime.now(),
 					expectedDepartureTime).getMinutes();
 			return minutes.toString() + " min";
 		}
 
-		return String.valueOf(expectedDepartureTime.getHourOfDay()) + ":"
-				+ String.valueOf(expectedDepartureTime.getMinuteOfHour());
+		return zeroPad(String.valueOf(expectedDepartureTime.getHourOfDay()), 2) + ":"
+				+ zeroPad(String.valueOf(expectedDepartureTime.getMinuteOfHour()), 2);
 	}
 
 	/*
@@ -101,5 +102,23 @@ public class RealTimeData {
 
 	public String toString() {
 		return "Linje " + line + "\nDestinasjon: " + destination;
+	}
+
+	private String zeroPad(String input, int targetLength) {
+
+		// Check input
+		if (targetLength <= input.length()) {
+			return input;
+		}
+
+		String result = input;
+		int currentLength = input.length();
+		int zerosNeeded = targetLength - currentLength;
+		for (int i = 0; i < zerosNeeded; i++) {
+			result = "0".concat(result);
+		}
+
+		return result;
+
 	}
 }
