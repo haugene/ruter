@@ -8,8 +8,6 @@ import no.ruter.app.domain.Platform;
 import no.ruter.app.domain.RealTimeData;
 import no.ruter.app.domain.RealTimeLocation;
 import no.ruter.app.exception.RepositoryException;
-import no.ruter.app.geoconverter.Conversion;
-import no.ruter.app.geoconverter.GeographicPoint;
 import no.ruter.app.repository.LocationRepository;
 import no.ruter.app.repository.PlaceRepository;
 import no.ruter.app.repository.RealTimeRepository;
