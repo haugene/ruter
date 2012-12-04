@@ -8,7 +8,10 @@ import no.ruter.app.domain.Platform;
 import no.ruter.app.domain.RealTimeData;
 import no.ruter.app.domain.RealTimeLocation;
 import no.ruter.app.exception.RepositoryException;
+import no.ruter.app.geoconverter.Conversion;
+import no.ruter.app.geoconverter.GeographicPoint;
 import no.ruter.app.repository.LocationRepository;
+import no.ruter.app.repository.PlaceRepository;
 import no.ruter.app.repository.RealTimeRepository;
 import no.ruter.app.repository.RepositoryFactory;
 import android.content.Context;
@@ -27,6 +30,9 @@ public class RuterServiceImpl implements RuterService {
 
 	/** Holds a {@link LocationRepository} */
 	private LocationRepository locationRepository;
+	
+	/** Holds a {@link PlaceRepository} */
+	private PlaceRepository placeRepository;
 
 	/**
 	 * Default constructor
@@ -34,6 +40,7 @@ public class RuterServiceImpl implements RuterService {
 	public RuterServiceImpl() {
 		realTimeRepository = RepositoryFactory.getRealTimeRepository();
 		locationRepository = RepositoryFactory.getLocationRepository();
+		placeRepository = RepositoryFactory.getPlaceRepository();
 	}
 
 	/**
@@ -85,9 +92,11 @@ public class RuterServiceImpl implements RuterService {
 			if(location == null){
 				return "Got null location";
 			}
-			sb.append("Accuracy: " + location.getAccuracy() + " | ");
-			sb.append("Lat: " + location.getLatitude() + " | ");
-			sb.append("Long: " + location.getLongitude());
+			
+			List<RealTimeLocation> locations = placeRepository.getLocationsNearMe(location);
+			for(RealTimeLocation loc : locations){
+				sb.append(loc.getName()).append(" | ");
+			}
 			
 			return sb.toString();
 		} catch (RepositoryException e) {
