@@ -79,7 +79,7 @@ public class RealTimeSectionFragment extends Fragment {
 //
 //        selectRealTimeLocations = new ArrayList<RealTimeLocation>();
 //
-//        selectStationAdapter = new ArrayAdapter<RealTimeLocation>(getActivity(), android.R.layout.simple_list_item_1, selectRealTimeLocations);
+//        selectStationAdapter = new ArrayAdapter<RealTimeLocation>(getActivity(), android.R.layout.simple_list_item_1, selectRealTimeLocations);  
 //        selectStationAdapter.setNotifyOnChange(true);
 //        selectStationListView.setAdapter(selectStationAdapter);
 //
@@ -275,6 +275,9 @@ public class RealTimeSectionFragment extends Fragment {
     private List<Platform> getRealTimeDataByPlatform(Integer id) {
         try {
             realTimeData = ServiceFactory.getRuterService().getRealTimeDataByPlatform(id);
+            realTimeDataAdapter = new RealTimeDataAdapter(getActivity(), R.layout.listview_realtime_data, realTimeData);
+            realTimeDataAdapter.setNotifyOnChange(true);
+            realTimeResultsListView.setAdapter(realTimeDataAdapter);
         } catch (RepositoryException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
