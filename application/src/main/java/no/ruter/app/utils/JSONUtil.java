@@ -117,6 +117,12 @@ public class JSONUtil {
 
 			JSONObject location = resultArray.getJSONObject(i);
 			RealTimeLocation realTimeLocation = getRealTimeLocation(location);
+			
+			// Ruter returns some locations with name "null"
+			if("null".equals(realTimeLocation.getName())){
+				break;
+			}
+			
 			realTimeLocations.add(realTimeLocation);
 		}
 
