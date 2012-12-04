@@ -24,7 +24,7 @@ public class Platform implements Comparable<Platform>{
 	 *            platform name
 	 */
 	public Platform(String name) {
-		this.name = name;
+		this.name = name.trim();
 		departures = new ArrayList<RealTimeData>();
 	}
 

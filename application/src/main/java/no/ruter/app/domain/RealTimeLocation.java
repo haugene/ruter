@@ -17,9 +17,9 @@ public class RealTimeLocation {
 	 */
 	public RealTimeLocation(String name, Integer id, String district) {
 		super();
-		this.name = name;
+		this.name = name.trim();
 		this.id = id;
-		this.district = district;
+		this.district = district.trim();
 	}
 
 	/*

@@ -27,11 +27,11 @@ public class RealTimeData {
 			DateTime expectedDepartureTime, DateTime timestamp,
 			String platformName, VehicleType vehicleType) {
 		super();
-		this.line = line;
-		this.destination = destination;
+		this.line = line.trim();
+		this.destination = destination.trim();
 		this.expectedDepartureTime = expectedDepartureTime;
 		this.timestamp = timestamp;
-		this.platformName = platformName;
+		this.platformName = platformName.trim();
 		this.vehicleType = vehicleType;
 	}
 
