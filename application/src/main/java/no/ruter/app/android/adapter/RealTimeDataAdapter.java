@@ -21,14 +21,22 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Custom ArrayAdapter for displaying the real time data.
+ *
+ * @author daniel
+ *
+ */
 public class RealTimeDataAdapter extends ArrayAdapter {
 
     private List<Platform> platformList;
     private Context context;
-    int layoutResourceId;
-    String regex = "(\\d{2}[\\:]\\d{2})|(\\s{1}nå\\s{3})|(\\s{1}\\d{1}\\s{1}min)";
-    Matcher matcher;
-    Pattern pattern;
+    private int layoutResourceId;
+
+    // Regex for matching the different departure time formats
+    private String regex = "(\\d{2}[\\:]\\d{2})|(\\s{1}nå\\s{3})|(\\s{1}\\d{1}\\s{1}min)";
+    private Matcher matcher;
+    private Pattern pattern;
 
     public RealTimeDataAdapter(Context context, int textViewResourceId, List objects) {
         super(context, textViewResourceId, objects);
@@ -75,6 +83,7 @@ public class RealTimeDataAdapter extends ArrayAdapter {
         SpannableStringBuilder destinationSpannableStringBuilder = new SpannableStringBuilder();
         String departuresString = "";
 
+        // Loop through the departures and concat them to a string
         for (int i = 1; i < departures.size() && i < 5; i++) {
             departuresString = departuresString.concat(departures.get(i).getLine() + " " +
                     departures.get(i).getDestination() + " " + departures.get(i).getFormattedDepartureTime() + "   ");
@@ -84,6 +93,7 @@ public class RealTimeDataAdapter extends ArrayAdapter {
 
         destinationSpannableStringBuilder.append(departuresString);
 
+        // Formats the departure time texts
         while (matcher.find()) {
             destinationSpannableStringBuilder.setSpan(new ForegroundColorSpan(Color.parseColor("#FC6868")), matcher.start(), matcher.end(), 0);
         }
