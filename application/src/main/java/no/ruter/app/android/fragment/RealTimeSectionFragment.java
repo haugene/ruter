@@ -134,12 +134,10 @@ public class RealTimeSectionFragment extends Fragment {
                     // If we have a selectedLocation do a search on that ID
                     // If not we have to do a places search on the string
                     if (selectedLocation != null) {
-                        // TODO: progressBar not working
-                        progressBar.setVisibility(ProgressBar.VISIBLE);
                         selectRealTimeLocations.clear();
                         realTimeData = getRealTimeDataByPlatform(selectedLocation.getId());
-                        progressBar.setVisibility(ProgressBar.GONE);
-                    } else {
+                    }
+                    else {
                         // TODO: Exception handling
                         realTimeLocations.clear();
                         try {
@@ -221,8 +219,10 @@ public class RealTimeSectionFragment extends Fragment {
 
     }
 
-    // TODO: Possible to avoid return type?
-    // TODO: Exception handling
+    /**
+     * Fetches a list of RealTimeLocations from the service and updates the realTimeAutoCompleteAdapter with the data.
+     * Shows a progress bar while searching
+     */
     private class GetRealTimeLocationAsyncTask extends AsyncTask<String, Void, List<RealTimeLocation>> {
 
         @Override
@@ -243,8 +243,6 @@ public class RealTimeSectionFragment extends Fragment {
         // Need to call notifyDataSetChanged on the UI thread
         @Override
         protected void onPostExecute(List<RealTimeLocation> result) {
-            // TODO: Why does it not show up on the first update? Triggers at second update
-            // TODO: Should we clear, or just avoid duplicates?
             realTimeAutoCompleteAdapter = new ArrayAdapter<RealTimeLocation>(getActivity(), android.R.layout.simple_list_item_1, result);
             realtimeAutoCompleteTextView.setAdapter(realTimeAutoCompleteAdapter);
             realtimeAutoCompleteTextView.showDropDown();
@@ -253,12 +251,14 @@ public class RealTimeSectionFragment extends Fragment {
     }
 
 
-    // TODO: Possible to avoid return type?
-    // TODO: Exception handling
-    private class GetRealTimeDataAsyncTask extends AsyncTask<String, Void, String> {
+    /**
+     * Gets a list of platforms with data for the selected location and updates the RealTimeDataAdapter
+     * Shows a progress bar while searching
+     */
+    private class GetRealTimeDataAsyncTask extends AsyncTask<String, Void, List<Platform>> {
 
         @Override
-        protected String doInBackground(String... id) {
+        protected List<Platform> doInBackground(String... id) {
             realTimeData.clear();
             try {
                 realTimeData.addAll(ServiceFactory.getRuterService().getRealTimeDataByPlatform(Integer.parseInt(id[0])));
@@ -275,11 +275,11 @@ public class RealTimeSectionFragment extends Fragment {
 
         // Need to call notifyDataSetChanged on the UI thread
         @Override
-        protected void onPostExecute(String result) {
-            // TODO: Why does it not show up on the first update? Triggers at second update
-            // TODO: Should we clear, or just avoid duplicates?
+        protected void onPostExecute(List<Platform> result) {
             progressBar.setVisibility(ProgressBar.INVISIBLE);
             realTimeDataAdapter.notifyDataSetChanged();
+            // Data is successfully fetched, clear the input field
+            clearInput();
         }
     }
 
@@ -293,6 +293,11 @@ public class RealTimeSectionFragment extends Fragment {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         return realTimeData;
+    }
+
+    // Clears the user input
+    private void clearInput() {
+        realtimeAutoCompleteTextView.setText("");
     }
 
 }
