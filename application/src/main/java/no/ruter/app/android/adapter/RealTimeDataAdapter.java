@@ -50,6 +50,7 @@ public class RealTimeDataAdapter extends ArrayAdapter {
     }
 
     public View getView(int position, View view, ViewGroup parent) {
+        System.out.println("getView()");
         View realtimeDataView = view;
         if (realtimeDataView == null) {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
@@ -67,14 +68,14 @@ public class RealTimeDataAdapter extends ArrayAdapter {
         List<RealTimeData> departures = currentPlatform.getDepartures();
 
         platformName.setText("Platform " + currentPlatform.getName()); // TODO: String resource
-        lineNumber.setText(departures.get(position).getLine() + " "); // TODO: XMLify
-        lineName.setText(departures.get(position).getDestination() + " ");
-        currentDeparture.setText(departures.get(position).getFormattedDepartureTime());
+        lineNumber.setText(departures.get(0).getLine() + " "); // TODO: XMLify
+        lineName.setText(departures.get(0).getDestination() + " ");
+        currentDeparture.setText(departures.get(0).getFormattedDepartureTime());
 
         SpannableStringBuilder destinationSpannableStringBuilder = new SpannableStringBuilder();
         String departuresString = "";
 
-        for (int i = 0; i < departures.size() && i < 5; i++) {
+        for (int i = 1; i < departures.size() && i < 5; i++) {
             departuresString = departuresString.concat(departures.get(i).getLine() + " " +
                     departures.get(i).getDestination() + " " + departures.get(i).getFormattedDepartureTime() + "   ");
         }
@@ -85,7 +86,6 @@ public class RealTimeDataAdapter extends ArrayAdapter {
 
         while (matcher.find()) {
             destinationSpannableStringBuilder.setSpan(new ForegroundColorSpan(Color.parseColor("#FC6868")), matcher.start(), matcher.end(), 0);
-            System.out.println(matcher.group() + matcher.start() + matcher.end());
         }
 
         nextDepartures.setText(destinationSpannableStringBuilder);
