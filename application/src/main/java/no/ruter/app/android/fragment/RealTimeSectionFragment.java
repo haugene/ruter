@@ -279,6 +279,7 @@ public class RealTimeSectionFragment extends Fragment {
             // TODO: Why does it not show up on the first update? Triggers at second update
             // TODO: Should we clear, or just avoid duplicates?
             progressBar.setVisibility(ProgressBar.INVISIBLE);
+            realTimeDataAdapter.notifyDataSetChanged();
         }
     }
 
