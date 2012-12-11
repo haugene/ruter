@@ -13,7 +13,6 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import no.ruter.app.android.R;
-import no.ruter.app.android.adapter.LocationAutoCompleteAdapter;
 import no.ruter.app.android.adapter.RealTimeDataAdapter;
 import no.ruter.app.domain.Platform;
 import no.ruter.app.domain.RealTimeLocation;
@@ -47,7 +46,7 @@ public class RealTimeSectionFragment extends Fragment {
 
     private ArrayAdapter<RealTimeLocation> selectStationAdapter;
     private RealTimeDataAdapter realTimeDataAdapter;
-    private AutoCompleteTextView realtimeAutoComplete;
+    private AutoCompleteTextView realtimeAutoCompleteTextView;
 
     private ListView realTimeResultsListView;
     private ListView selectStationListView;
@@ -80,11 +79,6 @@ public class RealTimeSectionFragment extends Fragment {
 
     private void setUpViews() {
         setUpResultListView();
-//        realtimeAutoComplete = (AutoCompleteTextView) rootView.findViewById(R.id.realtimeAutoCompleteView);
-//        realtimeAutoComplete.setThreshold(SEARCH_THRESHOLD);
-//        LocationAutoCompleteAdapter locationAutoCompleteAdapter = new LocationAutoCompleteAdapter(getActivity(), android.R.layout.simple_list_item_1);
-//        locationAutoCompleteAdapter.setNotifyOnChange(true);
-//        realtimeAutoComplete.setAdapter(locationAutoCompleteAdapter);
         setUpAutoCompleteTextView();
 //        setUpSelectStationListView();
     }
@@ -122,16 +116,16 @@ public class RealTimeSectionFragment extends Fragment {
     }
 
     private void setUpAutoCompleteTextView() {
-        realtimeAutoComplete = (AutoCompleteTextView) rootView.findViewById(R.id.realtimeAutoCompleteView);
-        realtimeAutoComplete.setThreshold(SEARCH_THRESHOLD);
+        realtimeAutoCompleteTextView = (AutoCompleteTextView) rootView.findViewById(R.id.realtimeAutoCompleteView);
+        realtimeAutoCompleteTextView.setThreshold(SEARCH_THRESHOLD);
 
         realTimeLocations = new ArrayList<RealTimeLocation>();
 
         realTimeAutoCompleteAdapter = new ArrayAdapter<RealTimeLocation>(getActivity(), android.R.layout.simple_list_item_1, realTimeLocations);
-//        realTimeAutoCompleteAdapter.setNotifyOnChange(true);
-        realtimeAutoComplete.setAdapter(realTimeAutoCompleteAdapter);
+        realTimeAutoCompleteAdapter.setNotifyOnChange(true);
+        realtimeAutoCompleteTextView.setAdapter(realTimeAutoCompleteAdapter);
 
-        realtimeAutoComplete.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        realtimeAutoCompleteTextView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 boolean handled = false;
 
@@ -139,14 +133,13 @@ public class RealTimeSectionFragment extends Fragment {
                 if (i == EditorInfo.IME_ACTION_SEARCH) {
                     // If we have a selectedLocation do a search on that ID
                     // If not we have to do a places search on the string
-                    if(selectedLocation != null) {
+                    if (selectedLocation != null) {
                         // TODO: progressBar not working
                         progressBar.setVisibility(ProgressBar.VISIBLE);
                         selectRealTimeLocations.clear();
                         realTimeData = getRealTimeDataByPlatform(selectedLocation.getId());
                         progressBar.setVisibility(ProgressBar.GONE);
-                    }
-                    else {
+                    } else {
                         // TODO: Exception handling
                         realTimeLocations.clear();
                         try {
@@ -155,15 +148,13 @@ public class RealTimeSectionFragment extends Fragment {
                             // TODO: Display some sort of connection error?
                             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                         }
-                        if(realTimeLocations.size() == 0) {
+                        if (realTimeLocations.size() == 0) {
                             // TODO: Inform user of no match
-                        }
-                        else if(realTimeLocations.size() == 1) {
+                        } else if (realTimeLocations.size() == 1) {
                             selectRealTimeLocations.clear();
                             realTimeData.clear();
                             realTimeData.addAll(getRealTimeDataByPlatform(realTimeLocations.get(0).getId()));
-                        }
-                        else {
+                        } else {
                             realTimeData.clear();
                             selectRealTimeLocations.addAll(realTimeLocations);
                         }
@@ -179,7 +170,7 @@ public class RealTimeSectionFragment extends Fragment {
 
 
         // Clicking on an item in the auto complete list
-        realtimeAutoComplete.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        realtimeAutoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectedLocation = (RealTimeLocation) parent.getItemAtPosition(position);
                 //realTimeData = getRealTimeData(selectedLocation.getId());
@@ -203,7 +194,7 @@ public class RealTimeSectionFragment extends Fragment {
             }
         });
 
-        realtimeAutoComplete.addTextChangedListener(new TextWatcher() {
+        realtimeAutoCompleteTextView.addTextChangedListener(new TextWatcher() {
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
 
@@ -232,16 +223,16 @@ public class RealTimeSectionFragment extends Fragment {
 
     // TODO: Possible to avoid return type?
     // TODO: Exception handling
-    private class GetRealTimeLocationAsyncTask extends AsyncTask<String, Void, String> {
+    private class GetRealTimeLocationAsyncTask extends AsyncTask<String, Void, List<RealTimeLocation>> {
 
         @Override
-        protected String doInBackground(String... location) {
+        protected List<RealTimeLocation> doInBackground(String... location) {
             try {
                 realTimeLocations = ServiceFactory.getRuterService().findRealTimeLocations(location[0]);
             } catch (RepositoryException e) {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
-            return null;
+            return realTimeLocations;
         }
 
         @Override
@@ -251,12 +242,12 @@ public class RealTimeSectionFragment extends Fragment {
 
         // Need to call notifyDataSetChanged on the UI thread
         @Override
-        protected void onPostExecute(String result) {
+        protected void onPostExecute(List<RealTimeLocation> result) {
             // TODO: Why does it not show up on the first update? Triggers at second update
             // TODO: Should we clear, or just avoid duplicates?
-            realTimeAutoCompleteAdapter.clear();
-            realTimeAutoCompleteAdapter.addAll(realTimeLocations);
-            realTimeAutoCompleteAdapter.notifyDataSetChanged();
+            realTimeAutoCompleteAdapter = new ArrayAdapter<RealTimeLocation>(getActivity(), android.R.layout.simple_list_item_1, result);
+            realtimeAutoCompleteTextView.setAdapter(realTimeAutoCompleteAdapter);
+            realtimeAutoCompleteTextView.showDropDown();
             autoCompleteProgressBar.setVisibility(ProgressBar.INVISIBLE);
         }
     }
