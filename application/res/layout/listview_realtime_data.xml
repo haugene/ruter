@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#e5e5e5">
+<LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android">
 
     <RelativeLayout
             android:layout_width="match_parent"
@@ -24,7 +24,7 @@
                 android:textColor="#404040"
                 android:textSize="22sp"
                 android:textStyle="bold"
-                android:typeface="normal" />
+                android:typeface="normal" android:text="Platform"/>
 
         <View
                 android:id="@+id/view1"
@@ -37,15 +37,6 @@
                 android:layout_marginTop="5dp"
                 android:background="#e5e5e5" />
 
-        <ImageView
-                android:id="@+id/imageViewVehicleType"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignRight="@+id/view1"
-                android:maxHeight="24dp"
-                android:maxWidth="24dp" />
-
         <TextView
                 android:id="@+id/textViewLineNumber"
                 android:layout_width="wrap_content"
@@ -55,7 +46,7 @@
                 android:textColor="#707070"
                 android:textSize="18sp"
                 android:textStyle="normal"
-                android:typeface="normal" />
+                android:typeface="normal" android:text="20"/>
 
         <TextView
                 android:id="@+id/textViewDestinationName"
@@ -67,7 +58,7 @@
                 android:textColor="#707070"
                 android:textSize="18sp"
                 android:textStyle="normal"
-                android:typeface="normal" />
+                android:typeface="normal" android:text="Grefsen"/>
 
         <TextView
                 android:id="@+id/textViewDepartureTime"
@@ -79,7 +70,7 @@
                 android:textColor="#FC6868"
                 android:textSize="18sp"
                 android:textStyle="normal"
-                android:typeface="normal" />
+                android:typeface="normal" android:text="5 min"/>
 
         <TextView
                 android:id="@+id/textViewDepartureTimeScroller"
@@ -91,7 +82,7 @@
                 android:textColor="#707070"
                 android:textSize="12sp"
                 android:textStyle="normal"
-                android:typeface="normal" />
+                android:typeface="normal" android:text="blablabla"/>
     </RelativeLayout>
 
-</RelativeLayout>
+</LinearLayout>

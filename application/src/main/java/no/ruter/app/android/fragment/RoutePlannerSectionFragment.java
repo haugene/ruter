@@ -98,7 +98,7 @@ public class RoutePlannerSectionFragment extends Fragment {
         @Override
         protected List<RealTimeLocation> doInBackground(String... location) {
             Log.d("Fragment", "doInBackground thread = " + Thread.currentThread().getName());
-//            return ServiceFactory.getRuterService().findRealTimeLocations(location[0].replaceAll(" ", "%20")); // TODO: Replace space in repo
+//            return ServiceFactory.getRuterService().findRealTimeLocations(location[0]);
             return new ArrayList<RealTimeLocation>();
         }
     }
