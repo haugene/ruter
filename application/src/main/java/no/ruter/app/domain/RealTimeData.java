@@ -66,7 +66,11 @@ public class RealTimeData {
 				.plusSeconds(59))) {
 			Integer minutes = Minutes.minutesBetween(DateTime.now(),
 					expectedDepartureTime).getMinutes();
-			return minutes.toString() + " min";
+			
+			// Never display 0 min, wait for "nå" at 45 sec before departure
+			int minutesNotZero = Math.max(minutes, 1);
+			
+			return minutesNotZero + " min";
 		}
 
 		return zeroPad(String.valueOf(expectedDepartureTime.getHourOfDay()), 2) + ":"

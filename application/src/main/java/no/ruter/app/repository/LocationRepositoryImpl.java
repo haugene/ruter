@@ -1,6 +1,10 @@
 package no.ruter.app.repository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import no.ruter.app.exception.RepositoryException;
+import no.ruter.app.observers.LocationObserver;
 import no.ruter.app.utils.LocationUtil;
 
 import org.joda.time.DateTime;
@@ -33,7 +37,10 @@ public class LocationRepositoryImpl implements
 
 	/** Holds a timestamp from last repository call */
 	private DateTime lastRequest;
-
+	
+	/** Objects that should be notified on location change */
+	private List<LocationObserver> observers;
+	
 	/**
 	 * Default constructor.
 	 * 
@@ -44,16 +51,51 @@ public class LocationRepositoryImpl implements
 		
 		// Init util
 		locationUtil = new LocationUtil();
+		observers = new ArrayList<LocationObserver>();
 	}
 
 	/**
 	 * {@inheritDoc}
-	 * @throws RepositoryException 
 	 */
 	public Location getCurrentLocation(Context context) throws RepositoryException {
+		
+		// We've been called, check that listener is running
+		updateTimestampAndVerifyListener(context);
+
+		// Return the best location we got
+		return bestLocation;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void registerLocationObserver(LocationObserver observer, Context context) throws RepositoryException {
+		
+		// We've been called, check that listener is running
+		updateTimestampAndVerifyListener(context);
+		
+		// Add the observer to the list of observers
+		if(!observers.contains(observer)){
+			observers.add(observer);
+		}
+		
+		// Give him his first update
+		observer.foundBetterLocation(bestLocation);
+	}
+
+	/**
+	 * Common helper method for all queries to the location. Updates the
+	 * timestamp for lastRequest and makes sure a listener is registered
+	 * 
+	 * @param context for access to android services(listener)
+	 * @throws RepositoryException
+	 */
+	private void updateTimestampAndVerifyListener(Context context)
+			throws RepositoryException {
+		
 		// Update timestamp for last repo request, this is it!
 		lastRequest = DateTime.now();
-
+	
 		/*
 		 * If we have no listener, create it and register it. Get cached
 		 * location.
@@ -61,9 +103,6 @@ public class LocationRepositoryImpl implements
 		if (locationListener == null) {
 			createAndRegisterLocationListener(context);
 		}
-
-		// Return the best location we got
-		return bestLocation;
 	}
 
 	/**
@@ -74,9 +113,16 @@ public class LocationRepositoryImpl implements
 	 */
 	private void makeUseOfLocation(Location location) {
 
-		// Update our bet location if this one is better
+		// Check if the new location is better
 		if (locationUtil.isBetterLocation(location, bestLocation)) {
+
+			// Update our best location
 			bestLocation = location;
+
+			// Notify observers
+			for (LocationObserver observer : observers) {
+				observer.foundBetterLocation(location);
+			}
 		}
 
 		/*
@@ -90,6 +136,14 @@ public class LocationRepositoryImpl implements
 			// Remove references
 			locationListener = null;
 			locationManager = null;
+			
+			// Notify observers, no more updates
+			for (LocationObserver observer : observers) {
+				observer.stoppedLooking();
+			}
+			
+			// Clear list of observers, they'll have to register again
+			observers.clear();
 		}
 	}
 

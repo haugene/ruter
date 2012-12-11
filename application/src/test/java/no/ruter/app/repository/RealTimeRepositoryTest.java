@@ -89,8 +89,8 @@ public class RealTimeRepositoryTest {
 							&& realTime.getExpectedDepartureTime().isBefore(
 									DateTime.now().plusHours(2)));
 			assertTrue(
-					"RealTimeData did have a timestamp newer than 1 hr and older than now",
-					realTime.getTimestamp().isBeforeNow()
+					"RealTimeData did have a timestamp newer than 1 hr and older than now(ish)",
+					realTime.getTimestamp().minusMinutes(5).isBeforeNow()
 							&& realTime.getTimestamp().isAfter(
 									DateTime.now().minusHours(1)));
 		}
