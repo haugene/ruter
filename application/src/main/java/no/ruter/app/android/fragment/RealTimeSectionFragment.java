@@ -32,7 +32,8 @@ public class RealTimeSectionFragment extends Fragment {
 
     private View rootView;
 
-    private final static int SEARCH_THRESHOLD = 3;
+    private static final int SEARCH_THRESHOLD = 3;
+    private static final long SEARCH_DELAY = 400;
 
     private RealTimeLocation selectedLocation;
 
@@ -58,6 +59,8 @@ public class RealTimeSectionFragment extends Fragment {
 
     private ProgressBar progressBar;
     private ProgressBar autoCompleteProgressBar;
+
+    private long lastUserInput;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -205,7 +208,7 @@ public class RealTimeSectionFragment extends Fragment {
                     getRealTimeLocationAsyncTask.cancel(true);
                 }
 
-                if (charSequence.toString().length() >= SEARCH_THRESHOLD) {
+                if (charSequence.toString().length() >= SEARCH_THRESHOLD && doAutocomplete()) {
                     // AsyncTask can only be used once, so have to make a new one each time
                     getRealTimeLocationAsyncTask = new GetRealTimeLocationAsyncTask();
 
@@ -300,4 +303,14 @@ public class RealTimeSectionFragment extends Fragment {
         realtimeAutoCompleteTextView.setText("");
     }
 
+    /**
+     * Checks time since last user input
+     *
+     * @return true if time has exceeded SEARCH_DELAY
+     */
+    private boolean doAutocomplete() {
+        if(System.currentTimeMillis() - lastUserInput > SEARCH_DELAY)
+            return true;
+        return false;
+    }
 }
