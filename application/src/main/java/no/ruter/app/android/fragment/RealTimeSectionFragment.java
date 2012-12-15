@@ -210,6 +210,7 @@ public class RealTimeSectionFragment extends Fragment {
 
                 // Cancels an already running task
                 if (getRealTimeLocationAsyncTask != null && getRealTimeLocationAsyncTask.getStatus() != AsyncTask.Status.FINISHED) {
+                    Log.d(TAG, "Cancelling getRealTimeLocationAsyncTask");
                     getRealTimeLocationAsyncTask.cancel(true);
                 }
 
@@ -246,6 +247,8 @@ public class RealTimeSectionFragment extends Fragment {
                 } catch (InterruptedException e) {
                     Log.d(TAG, "Thread interrupted");
                 }
+
+                // Only perform search if the AsyncTask is not cancelled
                 if(!isCancelled()) {
                     Log.d(TAG, "Performing search");
                     realTimeLocations = ServiceFactory.getRuterService().findRealTimeLocations(location[0]);
