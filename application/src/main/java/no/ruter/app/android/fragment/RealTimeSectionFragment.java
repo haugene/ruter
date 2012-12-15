@@ -33,7 +33,7 @@ public class RealTimeSectionFragment extends Fragment {
     private View rootView;
 
     private static final int SEARCH_THRESHOLD = 3;
-    private static final long SEARCH_DELAY = 400;
+    private static final long SEARCH_DELAY = 500;
 
     private RealTimeLocation selectedLocation;
 
@@ -208,7 +208,12 @@ public class RealTimeSectionFragment extends Fragment {
                     getRealTimeLocationAsyncTask.cancel(true);
                 }
 
-                if (doAutocomplete() && charSequence.toString().length() >= SEARCH_THRESHOLD) {
+                // Hide the progress bar when under search threshold
+                if(charSequence.toString().length() < SEARCH_THRESHOLD) {
+                    autoCompleteProgressBar.setVisibility(ProgressBar.INVISIBLE);
+                }
+
+                if (charSequence.toString().length() >= SEARCH_THRESHOLD) {
                     // AsyncTask can only be used once, so have to make a new one each time
                     getRealTimeLocationAsyncTask = new GetRealTimeLocationAsyncTask();
 
@@ -231,7 +236,14 @@ public class RealTimeSectionFragment extends Fragment {
         @Override
         protected List<RealTimeLocation> doInBackground(String... location) {
             try {
-                realTimeLocations = ServiceFactory.getRuterService().findRealTimeLocations(location[0]);
+                try {
+                    Thread.sleep(SEARCH_DELAY);
+                } catch (InterruptedException e) {
+                    System.out.println("THREAD INTERRUPTED");
+                }
+                if(!isCancelled()) {
+                    realTimeLocations = ServiceFactory.getRuterService().findRealTimeLocations(location[0]);
+                }
             } catch (RepositoryException e) {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
@@ -301,19 +313,5 @@ public class RealTimeSectionFragment extends Fragment {
     // Clears the user input
     private void clearInput() {
         realtimeAutoCompleteTextView.setText("");
-    }
-
-    /**
-     * Checks time since last user input
-     *
-     * @return true if time has exceeded SEARCH_DELAY
-     */
-    private boolean doAutocomplete() {
-        if(System.currentTimeMillis() - lastUserInput > SEARCH_DELAY){
-            lastUserInput = System.currentTimeMillis();
-            return true;
-        }
-        lastUserInput = System.currentTimeMillis();
-        return false;
     }
 }
