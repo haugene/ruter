@@ -208,7 +208,7 @@ public class RealTimeSectionFragment extends Fragment {
                     getRealTimeLocationAsyncTask.cancel(true);
                 }
 
-                if (charSequence.toString().length() >= SEARCH_THRESHOLD && doAutocomplete()) {
+                if (doAutocomplete() && charSequence.toString().length() >= SEARCH_THRESHOLD) {
                     // AsyncTask can only be used once, so have to make a new one each time
                     getRealTimeLocationAsyncTask = new GetRealTimeLocationAsyncTask();
 
@@ -309,8 +309,11 @@ public class RealTimeSectionFragment extends Fragment {
      * @return true if time has exceeded SEARCH_DELAY
      */
     private boolean doAutocomplete() {
-        if(System.currentTimeMillis() - lastUserInput > SEARCH_DELAY)
+        if(System.currentTimeMillis() - lastUserInput > SEARCH_DELAY){
+            lastUserInput = System.currentTimeMillis();
             return true;
+        }
+        lastUserInput = System.currentTimeMillis();
         return false;
     }
 }
