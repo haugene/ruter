@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,8 +33,12 @@ public class RealTimeSectionFragment extends Fragment {
 
     private View rootView;
 
+    // Auto complete threshold and search delay
     private static final int SEARCH_THRESHOLD = 3;
     private static final long SEARCH_DELAY = 500;
+
+    // TAG for logging
+    private static final String TAG = "RealTimeSectionFragment";
 
     private RealTimeLocation selectedLocation;
 
@@ -178,7 +183,7 @@ public class RealTimeSectionFragment extends Fragment {
 
                 // Cancel the old task
                 if (getRealTimeDataAsyncTask != null && getRealTimeDataAsyncTask.getStatus() != AsyncTask.Status.FINISHED) {
-                    System.out.println("*Cancelling*");
+                    Log.d(TAG, "Cancelling getRealTimeDataAsyncTask");
                     getRealTimeDataAsyncTask.cancel(true);
                 }
 
@@ -239,9 +244,10 @@ public class RealTimeSectionFragment extends Fragment {
                 try {
                     Thread.sleep(SEARCH_DELAY);
                 } catch (InterruptedException e) {
-                    System.out.println("THREAD INTERRUPTED");
+                    Log.d(TAG, "Thread interrupted");
                 }
                 if(!isCancelled()) {
+                    Log.d(TAG, "Performing search");
                     realTimeLocations = ServiceFactory.getRuterService().findRealTimeLocations(location[0]);
                 }
             } catch (RepositoryException e) {
