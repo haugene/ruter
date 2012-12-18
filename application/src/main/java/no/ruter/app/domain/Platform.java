@@ -72,6 +72,8 @@ public class Platform implements Comparable<Platform>{
 	 * When we compare platforms, sort them alphabetically on name
 	 */
 	public int compareTo(Platform o) {
+		
+		// TODO: kristian : this sorts the platforms by name. 1, 11, 12, 2
 		return this.name.compareTo(o.name);
 	}
 }
