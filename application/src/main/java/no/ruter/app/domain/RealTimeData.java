@@ -58,6 +58,8 @@ public class RealTimeData {
 	 */
 	public String getFormattedDepartureTime() {
 		
+		// TODO: kristian : add some unit tests for this
+		
 		if(expectedDepartureTime.isBefore(DateTime.now().minusMinutes(1))){
 			return "-1";
 		}
