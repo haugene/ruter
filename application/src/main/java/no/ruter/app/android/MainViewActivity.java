@@ -12,6 +12,7 @@ import android.util.Log;
 import no.ruter.app.android.fragment.ClosestStopFragment;
 import no.ruter.app.android.fragment.RealTimeSectionFragment;
 import no.ruter.app.android.fragment.RoutePlannerSectionFragment;
+import no.ruter.app.service.ServiceFactory;
 
 
 public class MainViewActivity extends FragmentActivity implements ActionBar.TabListener {
@@ -50,6 +51,9 @@ public class MainViewActivity extends FragmentActivity implements ActionBar.TabL
 
         setUpViewPager();
         setUpTabs();
+        
+        // Start looking for current location
+        ServiceFactory.getRuterService().startLookingForNearbyLocations(getApplication());
     }
 
     private void setUpViewPager() {

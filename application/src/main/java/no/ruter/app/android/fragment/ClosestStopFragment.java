@@ -64,9 +64,25 @@ public class ClosestStopFragment extends Fragment {
 				
 				// We won't get any more updates on this one
 				nearMeObserver = null;
+				
+				textView.setText("Stopped looking for locations");
 			}
 			
 			public void listUpdated(List<RealTimeLocation> nearby) {
+				
+				if(nearby == null){
+					/*
+					 *  Something horrible happened. We got a new location,
+					 *  but somehow we had an error getting stops.
+					 */
+					textView.setText("An error occured");
+					return;
+				}
+				
+				if(nearby.size() == 0){
+					textView.setText("Got empty list of stops");
+					return;
+				}
 				
 				StringBuilder sb = new StringBuilder();
 
@@ -75,7 +91,6 @@ public class ClosestStopFragment extends Fragment {
 				}
 				
 				textView.setText(sb.toString());
-				
 			}
 		};
 		
