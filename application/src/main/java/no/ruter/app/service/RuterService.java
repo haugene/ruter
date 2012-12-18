@@ -75,5 +75,13 @@ public interface RuterService {
 	 * @throws RepositoryException 
 	 */
 	public void registerNearMeObserver(NearMeObserver nearMeObserver, Context context) throws RepositoryException;
+	
+	/**
+	 * Starts the process of getting our location. Our service will register a
+	 * location listener to the repository
+	 * 
+	 * @param context
+	 */
+	public void startLookingForNearbyLocations(Context context);
 
 }

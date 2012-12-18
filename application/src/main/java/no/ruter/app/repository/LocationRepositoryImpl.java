@@ -41,6 +41,8 @@ public class LocationRepositoryImpl implements
 	/** Objects that should be notified on location change */
 	private List<LocationObserver> observers;
 	
+	private final Integer MINUTES_TO_LISTEN_FOR_LOCATION = 1;
+	
 	/**
 	 * Default constructor.
 	 * 
@@ -128,7 +130,7 @@ public class LocationRepositoryImpl implements
 		/*
 		 * If we have been probing for 5 minutes without timer reset, stop
 		 */
-		if (lastRequest.isBefore(DateTime.now().minusMinutes(5))) {
+		if (lastRequest.isBefore(DateTime.now().minusMinutes(MINUTES_TO_LISTEN_FOR_LOCATION))) {
 
 			// Deregister listener
 			locationManager.removeUpdates(locationListener);

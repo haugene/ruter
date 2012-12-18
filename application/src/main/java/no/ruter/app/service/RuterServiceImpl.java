@@ -111,17 +111,61 @@ public class RuterServiceImpl implements RuterService {
 	 */
 	public void registerNearMeObserver(NearMeObserver nearMeObserver, Context context) throws RepositoryException {
 		
+		// Add the observer if it's not already there
+		/*
+		 * NOTE: This needs to be done before registering the listener. This is
+		 * because the register process will call the locationObserver. If we
+		 * haven't added the nearMeObserver by then, that call will be lost.
+		 */
+		if(!nearMeObservers.contains(nearMeObserver)){
+			nearMeObservers.add(nearMeObserver);
+		}
+		
+		// We need an observer for location changes
+		createAndRegisterLocationObserver(context);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void startLookingForNearbyLocations(Context context) {
+		try {
+			createAndRegisterLocationObserver(context);
+		} catch (RepositoryException e) {
+			// TODO: kristian: We probably don't have location provider.
+			/*
+			 * should we throw it? This method simply starts looking for
+			 * locations. The caller will call another method later to use
+			 * the information. It will get the same error.
+			 */
+		}
+	}
+
+	/**
+	 * Creates a {@link LocationObserver} if one does not already exist.
+	 * The observer is then registered with the repository.
+	 * @param context
+	 * @throws RepositoryException
+	 */
+	private void createAndRegisterLocationObserver(Context context) throws RepositoryException {
+		
 		// First check if we have an observer listening to location changes
 		if(locationObserver == null){
 			locationObserver = createLocationObserver();
 		}
 		
-		// Register it. If it's already registered, a timer will be reset.
-		locationRepository.registerLocationObserver(locationObserver, context);
-		
-		// Add the observer if it's not already there
-		if(!nearMeObservers.contains(nearMeObserver)){
-			nearMeObservers.add(nearMeObserver);
+		try {
+			
+			// Register it. If it's already registered, a timer will be reset.
+			locationRepository.registerLocationObserver(locationObserver, context);
+			
+		} catch (RepositoryException e) {
+			
+			// We couldn't register our observer, set it to null
+			locationObserver = null;
+			
+			// Then throw the exception
+			throw e;
 		}
 	}
 
@@ -151,10 +195,12 @@ public class RuterServiceImpl implements RuterService {
 			
 			public void foundBetterLocation(Location location) {
 				
-				// Found a better location, find stops
 				try {
 					
+					// Found a better location, find stops
 					List<RealTimeLocation> nearMe = placeRepository.getLocationsNearMe(location);
+					
+					// Notify observers
 					for(NearMeObserver observer : nearMeObservers){
 						observer.listUpdated(nearMe);
 					}
