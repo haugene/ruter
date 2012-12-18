@@ -49,8 +49,10 @@ public class RealTimeRepositoryImpl implements RealTimeRepository {
 		String encodedQuery;
 		try {
 			
+			String trimmedQuery = query.trim();
+			
 			URLCodec urlCodec = new URLCodec("UTF-8");
-			encodedQuery = urlCodec.encode(query);
+			encodedQuery = urlCodec.encode(trimmedQuery);
 			
 			// The URL-Codec encodes " " as "+", we need "%20"
 			// TODO: kristian: find another encoder?
