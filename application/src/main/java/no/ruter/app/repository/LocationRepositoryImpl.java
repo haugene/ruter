@@ -128,7 +128,7 @@ public class LocationRepositoryImpl implements
 		}
 
 		/*
-		 * If we have been probing for 5 minutes without timer reset, stop
+		 * If we have been probing for a while without timer reset, stop
 		 */
 		if (lastRequest.isBefore(DateTime.now().minusMinutes(MINUTES_TO_LISTEN_FOR_LOCATION))) {
 
