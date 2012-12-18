@@ -54,7 +54,7 @@ public class RealTimeRepositoryImpl implements RealTimeRepository {
 			
 			// The URL-Codec encodes " " as "+", we need "%20"
 			// TODO: kristian: find another encoder?
-			encodedQuery = encodedQuery.replaceAll("+", "%20");
+			encodedQuery = encodedQuery.replaceAll("\\+", "%20");
 			
 		} catch (EncoderException ee) {
 			return new ArrayList<RealTimeLocation>();
