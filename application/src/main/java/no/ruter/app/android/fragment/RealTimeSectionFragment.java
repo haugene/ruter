@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +33,12 @@ public class RealTimeSectionFragment extends Fragment {
 
     private View rootView;
 
-    private final static int SEARCH_THRESHOLD = 3;
+    // Auto complete threshold and search delay
+    private static final int SEARCH_THRESHOLD = 3;
+    private static final long SEARCH_DELAY = 500;
+
+    // TAG for logging
+    private static final String TAG = "RealTimeSectionFragment";
 
     private RealTimeLocation selectedLocation;
 
@@ -58,6 +64,8 @@ public class RealTimeSectionFragment extends Fragment {
 
     private ProgressBar progressBar;
     private ProgressBar autoCompleteProgressBar;
+
+    private long lastUserInput;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -175,7 +183,7 @@ public class RealTimeSectionFragment extends Fragment {
 
                 // Cancel the old task
                 if (getRealTimeDataAsyncTask != null && getRealTimeDataAsyncTask.getStatus() != AsyncTask.Status.FINISHED) {
-                    System.out.println("*Cancelling*");
+                    Log.d(TAG, "Cancelling getRealTimeDataAsyncTask");
                     getRealTimeDataAsyncTask.cancel(true);
                 }
 
@@ -202,7 +210,13 @@ public class RealTimeSectionFragment extends Fragment {
 
                 // Cancels an already running task
                 if (getRealTimeLocationAsyncTask != null && getRealTimeLocationAsyncTask.getStatus() != AsyncTask.Status.FINISHED) {
+                    Log.d(TAG, "Cancelling getRealTimeLocationAsyncTask");
                     getRealTimeLocationAsyncTask.cancel(true);
+                }
+
+                // Hide the progress bar when under search threshold
+                if(charSequence.toString().length() < SEARCH_THRESHOLD) {
+                    autoCompleteProgressBar.setVisibility(ProgressBar.INVISIBLE);
                 }
 
                 if (charSequence.toString().length() >= SEARCH_THRESHOLD) {
@@ -228,7 +242,17 @@ public class RealTimeSectionFragment extends Fragment {
         @Override
         protected List<RealTimeLocation> doInBackground(String... location) {
             try {
-                realTimeLocations = ServiceFactory.getRuterService().findRealTimeLocations(location[0]);
+                try {
+                    Thread.sleep(SEARCH_DELAY);
+                } catch (InterruptedException e) {
+                    Log.d(TAG, "Thread interrupted");
+                }
+
+                // Only perform search if the AsyncTask is not cancelled
+                if(!isCancelled()) {
+                    Log.d(TAG, "Performing search");
+                    realTimeLocations = ServiceFactory.getRuterService().findRealTimeLocations(location[0]);
+                }
             } catch (RepositoryException e) {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
@@ -299,5 +323,4 @@ public class RealTimeSectionFragment extends Fragment {
     private void clearInput() {
         realtimeAutoCompleteTextView.setText("");
     }
-
 }
