@@ -57,6 +57,10 @@ public class RealTimeData {
 	 * @return formatted departure info
 	 */
 	public String getFormattedDepartureTime() {
+		
+		if(expectedDepartureTime.isBefore(DateTime.now().minusMinutes(1))){
+			return "-1";
+		}
 
 		if (expectedDepartureTime.isBefore(DateTime.now().plusSeconds(45))) {
 			return "nå";
