@@ -4,6 +4,7 @@ import static no.ruter.app.utils.JSONUtil.FIND_MATCHES;
 import static no.ruter.app.utils.JSONUtil.GET_DATA;
 import static no.ruter.app.utils.JSONUtil.WEB_SERVICE_HOST_URL;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,8 +48,13 @@ public class RealTimeRepositoryImpl implements RealTimeRepository {
 		 */
 		String encodedQuery;
 		try {
+			
 			URLCodec urlCodec = new URLCodec("UTF-8");
 			encodedQuery = urlCodec.encode(query);
+			
+			// The URL-Codec encodes " " as "+", we need "%20"
+			encodedQuery = encodedQuery.replaceAll("+", "%20");
+			
 		} catch (EncoderException ee) {
 			return new ArrayList<RealTimeLocation>();
 		}
