@@ -8,6 +8,8 @@ import no.ruter.app.domain.Platform;
 import no.ruter.app.domain.RealTimeData;
 import no.ruter.app.domain.RealTimeLocation;
 import no.ruter.app.exception.RepositoryException;
+import no.ruter.app.observers.LocationObserver;
+import no.ruter.app.observers.NearMeObserver;
 import no.ruter.app.repository.LocationRepository;
 import no.ruter.app.repository.PlaceRepository;
 import no.ruter.app.repository.RealTimeRepository;
@@ -31,6 +33,12 @@ public class RuterServiceImpl implements RuterService {
 	
 	/** Holds a {@link PlaceRepository} */
 	private PlaceRepository placeRepository;
+	
+	/** Holds the {@link LocationObserver} used to get location updates */
+	private LocationObserver locationObserver;
+	
+	/** Holds a {@link List} of {@link NearMeObserver} that want to be updated */
+	private List<NearMeObserver> nearMeObservers;
 
 	/**
 	 * Default constructor
@@ -39,6 +47,7 @@ public class RuterServiceImpl implements RuterService {
 		realTimeRepository = RepositoryFactory.getRealTimeRepository();
 		locationRepository = RepositoryFactory.getLocationRepository();
 		placeRepository = RepositoryFactory.getPlaceRepository();
+		nearMeObservers = new ArrayList<NearMeObserver>();
 	}
 
 	/**
@@ -47,13 +56,6 @@ public class RuterServiceImpl implements RuterService {
 	public List<RealTimeLocation> findRealTimeLocations(String locName)
 			throws RepositoryException {
 		return realTimeRepository.findLocations(locName);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public List<RealTimeLocation> findRealTimeLocationsNearMe(Context context) {
-		return new ArrayList<RealTimeLocation>();
 	}
 
 	/**
@@ -103,6 +105,75 @@ public class RuterServiceImpl implements RuterService {
 		
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * @throws RepositoryException 
+	 */
+	public void registerNearMeObserver(NearMeObserver nearMeObserver, Context context) throws RepositoryException {
+		
+		// First check if we have an observer listening to location changes
+		if(locationObserver == null){
+			locationObserver = createLocationObserver();
+		}
+		
+		// Register it. If it's already registered, a timer will be reset.
+		locationRepository.registerLocationObserver(locationObserver, context);
+		
+		// Add the observer if it's not already there
+		if(!nearMeObservers.contains(nearMeObserver)){
+			nearMeObservers.add(nearMeObserver);
+		}
+	}
+
+	/**
+	 * Creates a location observer. This object implements what we do when a new
+	 * location is known.
+	 * 
+	 * @return
+	 */
+	private LocationObserver createLocationObserver() {
+		
+		return new LocationObserver() {
+			
+			public void stoppedLooking() {
+				
+				// Will not get any more updates, clear observer
+				locationObserver = null;
+				
+				// Notify observers
+				for(NearMeObserver observer : nearMeObservers){
+					observer.stoppedLooking();
+				}
+				
+				// Remove observers
+				nearMeObservers.clear();
+			}
+			
+			public void foundBetterLocation(Location location) {
+				
+				// Found a better location, find stops
+				try {
+					
+					List<RealTimeLocation> nearMe = placeRepository.getLocationsNearMe(location);
+					for(NearMeObserver observer : nearMeObservers){
+						observer.listUpdated(nearMe);
+					}
+					
+				} catch (RepositoryException e) {
+					
+					/*
+					 *  Something went wrong when trying to get nearby stops.
+					 *  We indicate this to the view by updating with "null".
+					 */
+					
+					for(NearMeObserver observer : nearMeObservers){
+						observer.listUpdated(null);
+					}
+				}
+			}
+		};
+	}
+
 	private List<Platform> sortRealTimeDataOnPlatform(List<RealTimeData> data) {
 
 		List<Platform> platforms = new ArrayList<Platform>();
@@ -111,18 +182,18 @@ public class RuterServiceImpl implements RuterService {
 		for (RealTimeData realTimeData : data) {
 
 			Platform platform = new Platform(realTimeData.getPlatformName());
+			
 			if (platforms.contains(platform)) {
 
 				// The platform exists, add this RealTimeData
-				platforms.get(platforms.indexOf(platform)).getDepartures()
-						.add(realTimeData);
+				platforms.get(platforms.indexOf(platform)).getDepartures().add(realTimeData);
+				
 			} else {
 
 				// First entry for this platform, add data and platform
 				platform.getDepartures().add(realTimeData);
 				platforms.add(platform);
 			}
-
 		}
 		
 		// Sort the list of platforms and return it

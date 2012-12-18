@@ -6,6 +6,7 @@ import no.ruter.app.domain.Platform;
 import no.ruter.app.domain.RealTimeData;
 import no.ruter.app.domain.RealTimeLocation;
 import no.ruter.app.exception.RepositoryException;
+import no.ruter.app.observers.NearMeObserver;
 import android.content.Context;
 
 /**
@@ -30,17 +31,6 @@ public interface RuterService {
 	 */
 	public List<RealTimeLocation> findRealTimeLocations(String locName)
 			throws RepositoryException;
-
-	/**
-	 * Uses the gps/network/wlan location of the device to find a list of nearby
-	 * realtime locations
-	 * 
-	 * @param context
-	 *            context to use for looking up system services
-	 * 
-	 * @return list of {@link RealTimeLocation} that are close
-	 */
-	public List<RealTimeLocation> findRealTimeLocationsNearMe(Context context);
 
 	/**
 	 * Retrieves the real time data for the selected location
@@ -75,5 +65,15 @@ public interface RuterService {
 	 * @return
 	 */
 	public String printLocationData(Context context);
+
+	/**
+	 * Registers a {@link NearMeObserver} that will be called when a new
+	 * location is obtained. Once a new location is known, we query nearby stops
+	 * and call the observer.
+	 * 
+	 * @param nearMeObserver
+	 * @throws RepositoryException 
+	 */
+	public void registerNearMeObserver(NearMeObserver nearMeObserver, Context context) throws RepositoryException;
 
 }
